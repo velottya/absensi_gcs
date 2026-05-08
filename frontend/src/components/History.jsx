@@ -28,24 +28,7 @@ const History = () => {
     ? attendanceList
     : attendanceList.filter(item => item.type === filter);
 
-  const deleteRecord = async (id) => {
-    if (window.confirm('Hapus record ini?')) {
-      try {
-        // Note: Assuming there's a delete endpoint, but for now we'll just remove from state
-        // await axios.delete(`/attendance/${id}`);
-        setAttendanceList(attendanceList.filter(item => item.id !== id));
-      } catch (err) {
-        setError('Gagal menghapus record');
-      }
-    }
-  };
-
-  const clearAll = () => {
-    if (window.confirm('Hapus semua history? Tindakan ini tidak dapat dibatalkan!')) {
-      // Note: This would need a backend endpoint to clear all
-      setAttendanceList([]);
-    }
-  };
+  // Delete and clear functionality removed as per requirement
 
   const formatTime = (timestamp) => {
     return new Date(timestamp).toLocaleString('id-ID', {
@@ -118,14 +101,7 @@ const History = () => {
                 Keluar
               </button>
             </div>
-            {attendanceList.length > 0 && user?.role === 'admin' && (
-              <button
-                onClick={clearAll}
-                className="px-4 py-2 bg-red-100 text-red-700 rounded-xl font-semibold hover:bg-red-200 border border-red-300 transition-all duration-200"
-              >
-                Hapus Semua
-              </button>
-            )}
+
           </div>
 
           {filteredList.length === 0 ? (
@@ -166,14 +142,7 @@ const History = () => {
                           />
                         </div>
                       )}
-                      {user?.role === 'admin' && (
-                        <button
-                          onClick={() => deleteRecord(record.id)}
-                          className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 font-semibold text-sm transition-all"
-                        >
-                          Hapus
-                        </button>
-                      )}
+
                     </div>
                   </div>
                 </div>

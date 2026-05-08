@@ -78,14 +78,6 @@ const Login = () => {
             </Link>
           </p>
         </div>
-
-        <div className="bg-gradient-to-r from-green-100 to-emerald-100 backdrop-blur-lg rounded-2xl p-4 shadow-lg border border-green-200">
-          <p className="text-emerald-800 text-xs font-semibold mb-2">Demo Credentials:</p>
-          <div className="text-xs text-emerald-700 space-y-1 bg-white/50 p-2 rounded">
-            <p><span className="font-semibold">Admin:</span> admin@example.com / adminpass123</p>
-            <p><span className="font-semibold">User:</span> user@example.com / userpass123</p>
-          </div>
-        </div>
       </div>
     </div>
   );

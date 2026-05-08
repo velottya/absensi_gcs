@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Attendance = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [location, setLocation] = useState(null);
@@ -116,10 +118,12 @@ const Attendance = () => {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      setSuccess('Absensi berhasil disimpan');
-      setPhoto(null);
-      setPhotoDataUrl(null);
-      setTimeout(() => setSuccess(''), 3000);
+      setSuccess('Absensi berhasil disimpan!');
+      setTimeout(() => {
+        setSuccess('');
+        setPhoto(null);
+        setPhotoDataUrl(null);
+      }, 5000);
     } catch (err) {
       setError('Gagal submit: ' + (err.response?.data?.message || err.message));
     } finally {
@@ -193,7 +197,17 @@ const Attendance = () => {
         </div>
 
         {error && <p className="text-amber-700 mb-4 text-sm bg-amber-100 p-4 rounded-xl border border-amber-300">{error}</p>}
-        {success && <p className="text-emerald-700 mb-4 text-sm bg-green-100 p-4 rounded-xl border border-emerald-300">{success}</p>}
+        {success && (
+          <div className="mb-6 bg-green-50 p-4 rounded-xl border border-emerald-200">
+            <p className="text-emerald-700 font-semibold mb-3">{success}</p>
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="px-6 py-2 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+            >
+              Kembali ke Dashboard
+            </button>
+          </div>
+        )}
 
         <button
           onClick={submitAttendance}
