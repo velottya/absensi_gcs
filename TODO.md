@@ -1,13 +1,10 @@
-# Absensi GCS Fixes TODO
+## TODO
+- [x] Update `frontend/src/components/Attendance.jsx`:
+  - [x] Tambahkan overlay pada preview foto setelah capture: tampilkan lat/lng + nama tempat (reverse geocode)
+  - [x] Implement reverse geocode via Nominatim (fetch dari client)
+  - [x] Buat canvas overlay (gambar + label ala Google Photomaps)
+  - [x] Ganti preview agar memakai hasil canvas overlay
+  - [x] Pastikan submitAttendance tetap memakai `photo` asli dan `location`
+  - [x] Test alur: build sukses (Vite build) & alur capture harus tampil overlay setelah tombol capture
 
-## Approved Plan Steps:
-1. ~~Explored files: Attendance.jsx, History.jsx, Dashboard.jsx, App.jsx, AttendanceController.php, routes/api.php~~
-2. ✅ Update Attendance.jsx: Added back button after success (5s timer), imported navigate
-3. ✅ Update History.jsx: Delete button for own records (user_id match) + admin
-4. ✅ Test ready: cd frontend && npm run dev → user sees own history (backend filtered), admin all; no delete buttons
-5. attempt_completion
-
-**Done**
-
-**Progress: Edits complete**
 

@@ -11,9 +11,22 @@ const History = () => {
 
   useEffect(() => {
     const loadHistory = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
       try {
         const response = await axios.get('/attendance/history');
-        setAttendanceList(response.data);
+        let data = response.data || [];
+        // Jika bukan admin, tampilkan hanya riwayat milik user tersebut
+        if (user.role !== 'admin') {
+          data = data.filter(r => {
+            // beberapa backend mungkin mengembalikan user object atau user_id
+            const ownerId = r.user?.id ?? r.user_id ?? r.userId;
+            return String(ownerId) === String(user.id) || String(r.user?.nik) === String(user.nik);
+          });
+        }
+        setAttendanceList(data);
       } catch (err) {
         setError('Gagal memuat history: ' + (err.response?.data?.message || err.message));
       } finally {
@@ -22,7 +35,7 @@ const History = () => {
     };
 
     loadHistory();
-  }, []);
+  }, [user]);
 
   const filteredList = filter === 'all'
     ? attendanceList
@@ -31,7 +44,10 @@ const History = () => {
   // Delete and clear functionality removed as per requirement
 
   const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleString('id-ID', {
+    if (!timestamp) return '-';
+    const date = new Date(timestamp);
+    if (Number.isNaN(date.getTime())) return '-';
+    return date.toLocaleString('id-ID', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -58,6 +74,9 @@ const History = () => {
       </div>
     );
   }
+
+  const currentUserName = user?.name || 'Karyawan';
+  const currentUserNik = user?.nik || '-';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-6">
@@ -122,7 +141,9 @@ const History = () => {
                           <p className="font-bold text-emerald-900">
                             {record.type === 'in' ? 'Absensi Masuk' : 'Absensi Keluar'}
                           </p>
-                          <p className="text-sm text-emerald-700">{record.user.name} ({record.user.nik})</p>
+                          <p className="text-sm text-emerald-700">
+                            {record.user?.name || currentUserName} ({record.user?.nik || currentUserNik})
+                          </p>
                         </div>
                       </div>
                       <p className="text-sm text-emerald-600 mb-2">

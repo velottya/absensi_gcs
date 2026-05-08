@@ -22,14 +22,19 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // Fetch profile
-      axios.get('/user/profile').then(res => {
-        setUser(res.data);
-      }).catch(() => {
-        localStorage.removeItem('token');
-      });
-
+      axios.get('/user/profile')
+        .then(res => {
+          setUser(res.data);
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = async (credential, password) => {

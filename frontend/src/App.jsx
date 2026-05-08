@@ -12,12 +12,18 @@ function ProtectedRoute({ children }) {
   return user ? children : <Navigate to="/" />;
 }
 
+function PublicRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="flex justify-center items-center h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div></div>;
+  return user ? <Navigate to="/dashboard" /> : children;
+}
+
 function AppContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
