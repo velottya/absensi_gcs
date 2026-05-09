@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard.jsx'
 import Attendance from './components/Attendance.jsx'
 import History from './components/History.jsx'
 import Employees from './components/Employees.jsx'
+import EmployeeDetail from './components/EmployeeDetail.jsx'
 import Settings from './components/Settings.jsx'
 import Leave from './components/Leave.jsx'
 
@@ -43,6 +44,7 @@ function AppContent() {
                     <Route path="/attendance" element={<Attendance />} />
                     <Route path="/history" element={<History />} />
                     <Route path="/employees" element={<Employees />} />
+                    <Route path="/employees/:employeeId" element={<EmployeeDetail />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/setting" element={<Settings />} />
                     <Route path="/leave" element={<Leave />} />

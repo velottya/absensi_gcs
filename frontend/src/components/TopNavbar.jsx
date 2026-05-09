@@ -11,14 +11,23 @@ const navItems = [
   { key: 'profile', label: 'Profile', path: '/profile', icon: FaRegUser }
 ];
 
+const adminNavItems = [
+  { key: 'employees', label: 'Karyawan', path: '/employees', icon: FaUserCheck },
+  { key: 'history', label: 'History', path: '/history', icon: FaHistory },
+  { key: 'profile', label: 'Profile', path: '/profile', icon: FaRegUser }
+];
+
 export default function TopNavbar() {
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const isAdmin = user?.role === 'admin';
+  const visibleNavItems = isAdmin ? adminNavItems : navItems;
 
   const activeKey = useMemo(() => {
     const pathname = location.pathname;
+    if (pathname.startsWith('/employees')) return 'employees';
     if (pathname.startsWith('/history')) return 'history';
     if (pathname.startsWith('/attendance')) return 'attendance';
     if (pathname.startsWith('/leave')) return 'leave';
@@ -88,8 +97,11 @@ export default function TopNavbar() {
       </header>
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-sky-100 bg-white px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-16px_40px_rgba(2,132,199,0.14)]">
-        <div className="mx-auto grid max-w-md grid-cols-5 items-end gap-1">
-          {navItems.map((item) => (
+        <div
+          className="mx-auto grid max-w-md items-end gap-1"
+          style={{ gridTemplateColumns: `repeat(${visibleNavItems.length}, minmax(0, 1fr))` }}
+        >
+          {visibleNavItems.map((item) => (
             <TabButton
               key={item.key}
               item={item}

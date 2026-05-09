@@ -1,28 +1,28 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaChevronRight, FaUsers } from 'react-icons/fa';
+import { useAuth } from './AuthContext';
 
 const Employees = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchEmployees();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchEmployees = async () => {
     try {
       setLoading(true);
       const response = await axios.get('/employees');
-      setEmployees(response.data.data || response.data);
+      setEmployees(response.data.data || response.data || []);
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
-      console.error('Error fetching employees:', err);
     } finally {
       setLoading(false);
     }
@@ -30,124 +30,72 @@ const Employees = () => {
 
   if (!user || user.role !== 'admin') {
     return (
-      <div className="min-h-screen p-6 flex items-center justify-center" style={{ background: '#F8F9FA' }}>
-        <div
-          className="bg-white/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl"
-          style={{ border: '1px solid rgba(162,210,255,0.25)' }}
-        >
-          <h2 className="text-2xl font-extrabold" style={{ color: '#0b2a3a' }}>
-            Akses Ditolak
-          </h2>
-          <p className="mt-3" style={{ color: 'rgba(0,0,0,0.65)' }}>
-            Hanya admin yang dapat mengakses halaman ini
-          </p>
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center justify-center mt-6 px-6 py-2 rounded-2xl font-extrabold transition-transform"
-            style={{ background: '#A2D2FF', color: '#0b2a3a', boxShadow: '0 10px 25px rgba(162,210,255,0.35)' }}
-          >
-            Kembali ke Dashboard
-          </Link>
+      <div className="flex min-h-screen items-center justify-center bg-[#eef6ff] p-4">
+        <div className="rounded-[24px] border border-sky-100 bg-white p-6 text-center shadow-sm">
+          <h2 className="text-2xl font-black text-slate-900">Akses Ditolak</h2>
+          <p className="mt-2 text-sm font-semibold text-slate-500">Hanya admin yang dapat mengakses halaman ini.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-6" style={{ background: '#F8F9FA' }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-extrabold" style={{ color: '#333333' }}>
-            Daftar Karyawan
-          </h1>
-          <Link
-            to="/dashboard"
-            className="px-4 py-2 font-extrabold rounded-2xl transition-transform"
-            style={{ background: '#BDE0FE', color: '#0b2a3a' }}
-          >
-            Kembali
-          </Link>
-        </div>
+    <div className="min-h-screen bg-[#eef6ff] px-4 py-5">
+      <div className="mx-auto max-w-md space-y-4">
+        <section className="rounded-[28px] bg-gradient-to-br from-blue-700 via-sky-600 to-sky-400 p-5 text-white shadow-xl shadow-sky-200">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-sky-100">Admin</p>
+              <h1 className="mt-1 text-2xl font-black">Karyawan</h1>
+              <p className="mt-1 text-sm font-medium text-sky-50">{employees.length} data terdaftar</p>
+            </div>
+            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full border-2 border-white/35 bg-white/20 ring-4 ring-white/12">
+              <FaUsers size={25} />
+            </span>
+          </div>
+        </section>
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div
-              className="animate-spin rounded-full h-12 w-12 border-b-2"
-              style={{ borderColor: 'rgba(126,176,232,0.45)', borderBottomColor: '#7EB0E8' }}
-            ></div>
+          <div className="flex h-64 items-center justify-center">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-sky-100 border-b-blue-700" />
           </div>
         ) : error ? (
-          <div
-            className="px-6 py-4 rounded-2xl mb-6 border"
-            style={{ background: 'rgba(205,180,219,0.15)', borderColor: 'rgba(162,210,255,0.35)', color: '#0b2a3a' }}
-          >
-            <p className="font-bold mb-2">Error</p>
-            <p>{error}</p>
+          <div className="rounded-[24px] border border-amber-200 bg-amber-50 p-4">
+            <p className="font-black text-amber-900">Gagal memuat data</p>
+            <p className="mt-1 text-sm font-semibold text-amber-800">{error}</p>
             <button
+              type="button"
               onClick={fetchEmployees}
-              className="mt-4 px-4 py-2 rounded-2xl font-extrabold transition-transform"
-              style={{ background: 'rgba(126,176,232,0.25)', color: '#0b2a3a', border: '1px solid rgba(162,210,255,0.35)' }}
+              className="mt-4 h-11 rounded-2xl bg-blue-700 px-5 font-extrabold text-white"
             >
               Coba Lagi
             </button>
           </div>
+        ) : employees.length === 0 ? (
+          <div className="rounded-[24px] border border-sky-100 bg-white p-8 text-center shadow-sm">
+            <p className="font-black text-slate-900">Tidak ada data karyawan</p>
+          </div>
         ) : (
-          <div
-            className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl"
-            style={{ border: '1px solid rgba(162,210,255,0.22)' }}
-          >
-            {employees.length === 0 ? (
-              <div className="p-8 text-center">
-                <p style={{ color: '#0b2a3a', fontWeight: 700 }}>Tidak ada data karyawan</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead style={{ background: 'linear-gradient(90deg, #A2D2FF, #BDE0FE)' }}>
-                    <tr>
-                      <th className="px-6 py-4 text-left text-white font-extrabold">No</th>
-                      <th className="px-6 py-4 text-left text-white font-extrabold">Nama</th>
-                      <th className="px-6 py-4 text-left text-white font-extrabold">NIK</th>
-                      <th className="px-6 py-4 text-left text-white font-extrabold">Email</th>
-                      <th className="px-6 py-4 text-left text-white font-extrabold">Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {employees.map((employee, index) => (
-                      <tr
-                        key={employee.id}
-                        style={{ borderBottom: '1px solid rgba(162,210,255,0.18)' }}
-                      >
-                        <td className="px-6 py-4 font-semibold" style={{ color: '#0b2a3a' }}>
-                          {index + 1}
-                        </td>
-                        <td className="px-6 py-4 font-semibold" style={{ color: '#0b2a3a' }}>
-                          {employee.name}
-                        </td>
-                        <td className="px-6 py-4" style={{ color: 'rgba(0,0,0,0.65)' }}>
-                          {employee.nik}
-                        </td>
-                        <td className="px-6 py-4" style={{ color: 'rgba(0,0,0,0.65)' }}>
-                          {employee.email}
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className="px-3 py-1 rounded-full text-sm font-extrabold"
-                            style={{
-                              background: employee.role === 'admin' ? 'rgba(205,180,219,0.30)' : 'rgba(162,210,255,0.25)',
-                              color: employee.role === 'admin' ? '#6b2f5b' : '#0b2a3a',
-                              border: '1px solid rgba(162,210,255,0.25)',
-                            }}
-                          >
-                            {employee.role}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+          <div className="space-y-3">
+            {employees.map((employee) => (
+              <button
+                key={employee.id}
+                type="button"
+                onClick={() => navigate(`/employees/${employee.id}`)}
+                className="flex w-full items-center gap-3 rounded-[22px] border border-sky-100 bg-white p-4 text-left shadow-sm transition active:scale-[0.99]"
+              >
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-blue-700 text-lg font-black text-white">
+                  {(employee.name || 'K').slice(0, 1).toUpperCase()}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-base font-black text-slate-900">{employee.name || '-'}</span>
+                  <span className="block truncate text-sm font-semibold text-slate-500">NIK {employee.nik || '-'}</span>
+                </span>
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sky-50 text-blue-700">
+                  <FaChevronRight size={14} />
+                </span>
+              </button>
+            ))}
           </div>
         )}
       </div>
@@ -156,4 +104,3 @@ const Employees = () => {
 };
 
 export default Employees;
-
