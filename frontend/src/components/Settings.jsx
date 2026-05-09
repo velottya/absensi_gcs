@@ -9,7 +9,8 @@ const defaultSettings = {
   reminderOut: true,
   autoLocation: true,
   savePhotoPreview: true,
-  workStart: '08:00',
+  reminderLeadMinutes: 30,
+  workStart: '07:00',
   workEnd: '17:00',
   defaultAttendance: 'in'
 };
@@ -19,6 +20,9 @@ export default function Settings() {
   const [settings, setSettings] = useState(defaultSettings);
   const [saved, setSaved] = useState(false);
   const [notificationStatus, setNotificationStatus] = useState(() => getNotificationStatus());
+  const effectiveWorkStart = new Date().getDay() === 5 ? '06:00' : settings.workStart;
+  const reminderInTime = subtractMinutes(effectiveWorkStart, settings.reminderLeadMinutes);
+  const reminderOutTime = subtractMinutes(settings.workEnd, settings.reminderLeadMinutes);
 
   useEffect(() => {
     try {
@@ -90,7 +94,7 @@ export default function Settings() {
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-3">
-            <InfoPill label="Masuk" value={settings.workStart} />
+            <InfoPill label="Masuk" value={effectiveWorkStart} />
             <InfoPill label="Pulang" value={settings.workEnd} />
           </div>
         </section>
@@ -107,13 +111,13 @@ export default function Settings() {
           <div className="space-y-3">
             <ToggleRow
               title="Pengingat masuk"
-              text={`Aktif sekitar ${settings.workStart}`}
+              text="Sebelum jam masuk"
               checked={settings.reminderIn}
               onChange={(value) => update('reminderIn', value)}
             />
             <ToggleRow
               title="Pengingat pulang"
-              text={`Aktif sekitar ${settings.workEnd}`}
+              text="Sebelum jam pulang"
               checked={settings.reminderOut}
               onChange={(value) => update('reminderOut', value)}
             />
@@ -146,6 +150,13 @@ export default function Settings() {
           <div className="grid grid-cols-2 gap-3">
             <TimeField label="Masuk" value={settings.workStart} onChange={(value) => update('workStart', value)} />
             <TimeField label="Pulang" value={settings.workEnd} onChange={(value) => update('workEnd', value)} />
+          </div>
+
+          <div className="mt-3 rounded-2xl bg-blue-50 p-3">
+            <p className="text-sm font-extrabold text-slate-700">Pengingat otomatis</p>
+            <p className="mt-1 text-sm font-semibold text-slate-500">
+              Sebelum jam masuk dan sebelum jam pulang.
+            </p>
           </div>
 
           <div className="mt-3">
@@ -193,6 +204,14 @@ export default function Settings() {
 function getNotificationStatus() {
   if (typeof window === 'undefined' || !('Notification' in window)) return 'unsupported';
   return Notification.permission;
+}
+
+function subtractMinutes(time, minutes) {
+  const [hour, minute] = time.split(':').map(Number);
+  const totalMinutes = (hour * 60 + minute - minutes + 24 * 60) % (24 * 60);
+  const resultHour = String(Math.floor(totalMinutes / 60)).padStart(2, '0');
+  const resultMinute = String(totalMinutes % 60).padStart(2, '0');
+  return `${resultHour}:${resultMinute}`;
 }
 
 function InfoPill({ label, value }) {
