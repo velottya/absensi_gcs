@@ -1,57 +1,104 @@
-import { useAuth } from './AuthContext';
 import { Link } from 'react-router-dom';
+import { FaCalendarAlt, FaClipboardList, FaHistory, FaMapMarkerAlt, FaUserCheck } from 'react-icons/fa';
+import { useAuth } from './AuthContext';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const today = new Date().toLocaleDateString('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-6 flex items-center justify-center">
-      <div className="max-w-md w-full">
-        <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-green-100 mb-6">
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center text-4xl shadow-lg">
-              👤
+    <div className="min-h-screen bg-[#eef6ff] px-4 py-5">
+      <div className="mx-auto max-w-md space-y-4">
+        <section className="overflow-hidden rounded-[28px] bg-gradient-to-br from-blue-700 via-sky-600 to-sky-400 p-5 text-white shadow-xl shadow-sky-200">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-sky-100">{today}</p>
+              <h1 className="mt-2 text-2xl font-black leading-tight">Halo, {user?.name || 'Karyawan'}</h1>
+              <p className="mt-1 text-sm font-medium text-sky-50">NIK {user?.nik || '-'}</p>
             </div>
-            <h1 className="text-3xl font-bold text-emerald-800 mb-2">Selamat Datang</h1>
-            <p className="text-xl font-semibold text-emerald-700 mb-1">{user.name}</p>
-            <p className="text-emerald-600 text-sm bg-green-100 inline-block px-3 py-1 rounded-full">{user.nik}</p>
-            {user.role && (
-              <p className="text-emerald-600 text-sm mt-2 capitalize font-medium">Role: <span className="font-bold">{user.role}</span></p>
-            )}
+            <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-white/18 text-xl font-black ring-1 ring-white/25">
+              {(user?.name || 'A').slice(0, 1).toUpperCase()}
+            </div>
           </div>
 
-          <div className="space-y-3 mb-6">
-            <Link
-              to="/attendance"
-              className="block w-full p-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 text-center"
-            >
-              Mulai Absensi
-            </Link>
-            <Link
-              to="/history"
-              className="block w-full p-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 text-center"
-            >
-              Riwayat Absensi
-            </Link>
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <StatusPill label="Status" value="Siap Absen" />
+            <StatusPill label="Role" value={user?.role || 'Karyawan'} />
           </div>
+        </section>
 
-          <button
-            onClick={logout}
-            className="w-full p-3 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-xl transition-colors border border-red-300"
-          >
-            Logout
-          </button>
-        </div>
+        <section className="grid grid-cols-2 gap-3">
+          <QuickAction
+            to={user?.role === 'admin' ? '/employees' : '/attendance'}
+            icon={user?.role === 'admin' ? FaClipboardList : FaUserCheck}
+            label={user?.role === 'admin' ? 'Karyawan' : 'Absen'}
+            text={user?.role === 'admin' ? 'Kelola data' : 'Check in/out'}
+            primary
+          />
+          <QuickAction to="/leave" icon={FaCalendarAlt} label="Cuti" text="Ajukan izin" />
+          <QuickAction to="/history" icon={FaHistory} label="History" text="Riwayat absen" />
+          <QuickAction to="/profile" icon={FaClipboardList} label="Profile" text="Akun & setting" />
+        </section>
 
-        <div className="bg-gradient-to-r from-green-100 to-emerald-100 backdrop-blur-lg rounded-2xl p-6 shadow-lg border border-green-200">
-          <p className="text-emerald-800 text-sm text-center">
-            <span className="font-semibold">Tips:</span> Pastikan GPS dan kamera diizinkan untuk pengalaman terbaik
-          </p>
-        </div>
+        <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+              <FaMapMarkerAlt />
+            </span>
+            <div>
+              <h2 className="font-black text-slate-900">Kesiapan Absensi</h2>
+              <p className="text-sm font-medium text-slate-500">Pastikan GPS dan kamera aktif sebelum absen.</p>
+            </div>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <Readiness label="GPS" value="Wajib" />
+            <Readiness label="Kamera" value="Wajib" />
+          </div>
+        </section>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+function StatusPill({ label, value }) {
+  return (
+    <div className="rounded-2xl bg-white/16 p-3 ring-1 ring-white/20">
+      <p className="text-xs font-bold text-sky-100">{label}</p>
+      <p className="truncate text-base font-black text-white">{value}</p>
+    </div>
+  );
+}
 
+function QuickAction({ to, icon: Icon, label, text, primary }) {
+  return (
+    <Link
+      to={to}
+      className={[
+        'rounded-[24px] border p-4 shadow-sm transition active:scale-[0.98]',
+        primary ? 'border-blue-600 bg-blue-700 text-white shadow-blue-100' : 'border-sky-100 bg-white text-slate-900'
+      ].join(' ')}
+    >
+      <span className={primary ? 'grid h-11 w-11 place-items-center rounded-2xl bg-white/18' : 'grid h-11 w-11 place-items-center rounded-2xl bg-blue-50 text-blue-700'}>
+        <Icon />
+      </span>
+      <p className="mt-3 text-lg font-black">{label}</p>
+      <p className={primary ? 'text-sm font-semibold text-sky-100' : 'text-sm font-semibold text-slate-500'}>{text}</p>
+    </Link>
+  );
+}
+
+function Readiness({ label, value }) {
+  return (
+    <div className="rounded-2xl bg-sky-50 p-3">
+      <p className="text-xs font-bold text-slate-500">{label}</p>
+      <p className="font-black text-blue-700">{value}</p>
+    </div>
+  );
+}
+
+export default Dashboard;

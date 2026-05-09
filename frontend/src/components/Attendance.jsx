@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaSyncAlt } from 'react-icons/fa';
 
 const Attendance = () => {
   const { user } = useAuth();
@@ -14,7 +15,15 @@ const Attendance = () => {
   const [photoPreviewUrl, setPhotoPreviewUrl] = useState(null);
   const [photoDataUrl, setPhotoDataUrl] = useState(null);
   const [photoWithOverlayDataUrl, setPhotoWithOverlayDataUrl] = useState(null);
-  const [type, setType] = useState('in');
+  const [cameraFacing, setCameraFacing] = useState('user');
+  const [type, setType] = useState(() => {
+    try {
+      const settings = JSON.parse(localStorage.getItem('absensi.settings') || '{}');
+      return settings.defaultAttendance === 'out' ? 'out' : 'in';
+    } catch {
+      return 'in';
+    }
+  });
 
   const [loading, setLoading] = useState(false);
   const [gpsError, setGpsError] = useState('');
@@ -24,9 +33,17 @@ const Attendance = () => {
   // Check if user is admin
   const isAdmin = user?.role === 'admin';
 
+  const stopCamera = useCallback(() => {
+    if (videoRef.current?.srcObject) {
+      videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
+  }, []);
+
   useEffect(() => {
     // Get GPS
     if (navigator.geolocation) {
+      setGpsError('');
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           setLocation({
@@ -34,7 +51,7 @@ const Attendance = () => {
             lng: pos.coords.longitude
           });
         },
-        (err) => {
+        () => {
           setGpsError('GPS tidak tersedia atau dimatikan');
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -43,6 +60,7 @@ const Attendance = () => {
       setGpsError('Browser tidak support GPS');
     }
 
+
     // Cleanup camera - handled below
 
 
@@ -50,8 +68,9 @@ const Attendance = () => {
     if (!isAdmin) {
       const startCamera = async () => {
         try {
+          stopCamera();
           const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'user', width: 640, height: 480 }
+            video: { facingMode: cameraFacing, width: 640, height: 480 }
           });
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
@@ -60,18 +79,35 @@ const Attendance = () => {
             };
           }
         } catch (err) {
-          setError('Kamera tidak tersedia atau izin ditolak: ' + err.message);
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            if (videoRef.current) {
+              videoRef.current.srcObject = stream;
+              videoRef.current.onloadedmetadata = () => {
+                videoRef.current.play();
+              };
+            }
+          } catch (fallbackErr) {
+            setError('Kamera tidak tersedia atau izin ditolak: ' + fallbackErr.message);
+          }
         }
       };
       startCamera();
     }
 
     return () => {
-      if (videoRef.current?.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
-      }
+      stopCamera();
     };
-  }, [isAdmin]);
+  }, [cameraFacing, isAdmin, stopCamera]);
+
+  const switchCamera = () => {
+    setCameraFacing((current) => (current === 'user' ? 'environment' : 'user'));
+    setPhoto(null);
+    setPhotoPreviewUrl(null);
+    setPhotoDataUrl(null);
+    setPhotoWithOverlayDataUrl(null);
+    setError('');
+  };
 
   useEffect(() => {
     return () => {
@@ -219,14 +255,14 @@ const Attendance = () => {
                 octx.stroke();
 
                 // accent bar
-                octx.fillStyle = 'rgba(16, 185, 129, 0.95)';
+                octx.fillStyle = 'rgba(133, 173, 232, 0.95)';
                 drawRoundedRect(octx, x, y, 10, cardH, radius);
                 octx.fill();
 
                 // pin
                 const pinX = x + 30;
                 const pinY = y + 30;
-                octx.fillStyle = 'rgba(16, 185, 129, 0.95)';
+                octx.fillStyle = 'rgba(133, 173, 232, 0.95)';
                 octx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
                 octx.lineWidth = 2;
                 octx.beginPath();
@@ -331,21 +367,22 @@ const Attendance = () => {
 
   if (isAdmin) {
     return (
-      <div className="min-h-screen relative bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 px-3 py-4 sm:px-4 md:px-6">
+      <div className="min-h-screen px-3 sm:px-4 py-6" style={{ background: '#F8F9FA' }}>
+
         <button
           onClick={() => navigate('/dashboard')}
           aria-label="Kembali ke Dashboard"
           className="absolute top-4 left-4 z-50 bg-white/90 hover:bg-white px-3 py-2 rounded-full shadow-md border border-gray-200 flex items-center gap-2"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: '#0b2a3a' }}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <div className="w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 shadow-xl border border-green-100">
-          <h1 className="text-3xl font-bold text-emerald-800 mb-2 text-center">Akses Terbatas Admin</h1>
-          <p className="text-center text-emerald-600 mb-6">Admin hanya bisa melihat history absensi, tidak bisa upload</p>
+            <div className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 shadow-xl" style={{ border: '1px solid rgba(162,210,255,0.25)' }}>
+          <h1 className="text-3xl font-extrabold text-[#333333] mb-2 text-center">Akses Terbatas Admin</h1>
+          <p className="text-center" style={{ color: 'rgba(0,0,0,0.65)' }}>Admin hanya bisa melihat history absensi, tidak bisa upload</p>
           <div className="text-center">
-            <a href="/history" className="inline-block px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+            <a href="/history" className="inline-block px-6 py-3 font-extrabold rounded-2xl shadow-lg transition-transform" style={{ background: '#BDE0FE', color: '#0b2a3a' }}>
               Lihat History
             </a>
           </div>
@@ -355,54 +392,113 @@ const Attendance = () => {
   }
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 px-3 py-4 sm:px-4 md:px-6">
+    <div className="min-h-[calc(100vh-64px)] px-3 sm:px-4 py-6" style={{ background: '#F8F9FA' }}>
+
       <button
         onClick={() => navigate('/dashboard')}
         aria-label="Kembali ke Dashboard"
         className="absolute top-4 left-4 z-50 bg-white/90 hover:bg-white px-3 py-2 rounded-full shadow-md border border-gray-200 flex items-center gap-2"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: '#0b2a3a' }}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <div className="w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 shadow-xl border border-green-100">
-        <h1 className="text-3xl font-bold text-emerald-800 mb-2 text-center">📸 Absensi Geo-Selfie</h1>
-        <p className="text-center text-emerald-600 mb-6">Ambil foto selfie untuk absensi</p>
+      <div className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 shadow-xl" style={{ border: '1px solid rgba(162,210,255,0.25)' }}>
+        <h1 className="text-3xl font-extrabold text-[#333333] mb-2 text-center">
+          Absensi Karyawan
+        </h1>
+        <p className="text-center text-sm sm:text-base" style={{ color: 'rgba(0,0,0,0.65)' }}>
+        </p>
 
-        <div className="mb-5 p-3 sm:p-4 bg-green-50 rounded-xl border border-green-200">
-          <p className="text-emerald-900 font-semibold mb-1">Karyawan: <span className="text-emerald-700">{user.name}</span> (<span className="text-emerald-600">{user.nik}</span>)</p>
-          {location && (
-            <p className="text-emerald-700 text-sm">📍 Lokasi: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}</p>
-          )}
-          {gpsError && <p className="text-amber-600 text-sm mt-2">⚠️ {gpsError}</p>}
+        <div className="mb-5 p-4 rounded-2xl" style={{ background: 'rgba(162,210,255,0.12)', border: '1px solid rgba(162,210,255,0.22)' }}>
+          <p className="font-extrabold" style={{ color: '#333333' }}>
+            Karyawan: <span style={{ color: 'rgba(0,0,0,0.65)' }}>{user.name}</span>
+            <span style={{ marginLeft: 8, fontWeight: 900, color: 'rgba(0,0,0,0.55)' }}>({user.nik})</span>
+          </p>
+
+          <div className="mt-3 flex items-start gap-3">
+            <span aria-hidden="true" style={{ marginTop: 2 }}>📍</span>
+            <div>
+              <div className="text-sm font-extrabold" style={{ color: '#333333' }}>
+                Lokasi saat ini:
+              </div>
+              <div className="text-sm font-semibold" style={{ color: 'rgba(0,0,0,0.65)' }}>
+                {gpsError
+                  ? gpsError
+                  : !location
+                    ? 'Mengambil koordinat...'
+                    : `(${location.lat.toFixed(6)}, ${location.lng.toFixed(6)})`}
+              </div>
+              <div className="text-xs mt-1" style={{ color: 'rgba(0,0,0,0.45)' }}>
+                {placeName ? `Tempat: ${placeName}` : ''}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="mb-5 bg-gradient-to-b from-green-100 to-emerald-100 p-3 sm:p-5 rounded-xl border border-green-300">
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            className="w-full max-w-4xl mx-auto rounded-2xl shadow-lg block aspect-video object-cover bg-black"
-          />
-          <button
-            onClick={capturePhoto}
-            className="mt-5 w-20 h-20 sm:w-24 sm:h-24 mx-auto bg-gradient-to-br from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 rounded-full shadow-xl p-4 text-3xl font-bold transform hover:scale-110 transition-all duration-200 flex items-center justify-center cursor-pointer border-4 border-white"
-          >
-            📸
-          </button>
-          <p className="text-center text-emerald-700 text-sm mt-2 font-medium">Klik tombol untuk foto</p>
+        <div className="mb-5 rounded-2xl" style={{ background: 'linear-gradient(180deg, rgba(162,210,255,0.18), rgba(189,224,254,0.10))', border: '1px solid rgba(162,210,255,0.25)' }}>
+          <div className="p-3 sm:p-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <p className="text-sm font-extrabold" style={{ color: '#333333' }}>
+                {cameraFacing === 'environment' ? 'Kamera belakang' : 'Kamera depan'}
+              </p>
+              <button
+                type="button"
+                onClick={switchCamera}
+                className="flex items-center gap-2 rounded-2xl px-3 py-2 text-sm font-extrabold shadow-sm"
+                style={{ background: '#ffffff', color: '#1d4ed8', border: '1px solid rgba(162,210,255,0.35)' }}
+              >
+                <FaSyncAlt size={13} />
+                Switch
+              </button>
+            </div>
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className="w-full rounded-2xl shadow-lg block aspect-video object-cover"
+              style={{ background: '#0b2a3a' }}
+            />
+
+            <div className="mt-4 flex items-center justify-center">
+              <button
+                onClick={capturePhoto}
+                className="w-24 h-24 rounded-2xl shadow-lg transform transition-transform duration-200 flex items-center justify-center cursor-pointer"
+                style={{ background: '#BDE0FE', border: '1px solid rgba(162,210,255,0.35)', color: '#0b2a3a' }}
+                aria-label="Ambil Foto"
+              >
+                <img src="/kamera.png" alt="" className="h-12 w-12 object-contain" />
+              </button>
+            </div>
+            <p className="text-center text-sm mt-2 font-semibold" style={{ color: 'rgba(0,0,0,0.60)' }}>
+              Klik untuk ambil foto
+            </p>
+          </div>
         </div>
 
-        <div className="mb-5 bg-green-50 p-3 sm:p-4 rounded-xl border border-green-200">
+        <div className="mb-5 rounded-2xl p-3 sm:p-4" style={{ background: 'rgba(162,210,255,0.10)', border: '1px solid rgba(162,210,255,0.18)' }}>
+
           <div className="flex items-center justify-between gap-3 mb-3">
-            <p className="text-emerald-700 font-semibold">Preview Selfie:</p>
-            {(photoDataUrl || photoWithOverlayDataUrl) && (
-              <span className="text-xs sm:text-sm text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
+            <p className="text-sm font-extrabold" style={{ color: '#333333' }}>
+              Preview Foto
+            </p>
+
+            {(photoDataUrl || photoWithOverlayDataUrl) ? (
+              <span
+                className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full"
+                style={{ background: 'rgba(162,210,255,0.25)', border: '1px solid rgba(162,210,255,0.35)', color: '#0b2a3a' }}
+              >
                 Foto sudah diambil
               </span>
+            ) : (
+              <span className="text-xs" style={{ color: 'rgba(0,0,0,0.45)' }}>
+                Belum ada foto
+              </span>
             )}
+
           </div>
+
 
           {photoPreviewUrl || photoDataUrl || photoWithOverlayDataUrl ? (
             <div className="w-full overflow-hidden rounded-2xl border-4 border-white bg-white shadow-lg">
@@ -413,32 +509,50 @@ const Attendance = () => {
               />
             </div>
           ) : (
-            <div className="w-full min-h-40 sm:min-h-52 rounded-2xl border-2 border-dashed border-emerald-300 bg-white/70 flex items-center justify-center text-center px-6">
-              <p className="text-emerald-600 font-medium">Hasil selfie akan muncul di sini setelah tombol kamera ditekan.</p>
+            <div className="w-full min-h-40 sm:min-h-52 rounded-2xl border-2 border-dashed border-[#A2D2FF] bg-white/70 flex items-center justify-center text-center px-6">
+              <p className="font-medium" style={{ color: '#0b2a3a' }}>Hasil selfie akan muncul di sini setelah tombol kamera ditekan.</p>
             </div>
           )}
         </div>
 
 
         <div className="mb-6">
-          <label className="block text-emerald-900 font-semibold mb-2">Tipe Absen</label>
+          <label className="block text-sm font-extrabold mb-2" style={{ color: '#333333' }}>Tipe Absen</label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full p-3 rounded-xl bg-green-50 border-2 border-emerald-300 text-emerald-900 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+            className="w-full p-3 rounded-2xl"
+            style={{ background: '#F8F9FA', border: '1px solid rgba(0,0,0,0.08)', color: '#333333' }}
           >
-            <option value="in">Masuk</option>
-            <option value="out">Keluar</option>
+            <option value="in">Check In (Absen Masuk)</option>
+            <option value="out">Check Out (Absen Keluar)</option>
           </select>
         </div>
 
-        {error && <p className="text-amber-700 mb-4 text-sm bg-amber-100 p-4 rounded-xl border border-amber-300">{error}</p>}
+
+        {error && (
+          <p
+            className="mb-4 text-sm font-semibold rounded-2xl px-4 py-3"
+            style={{
+              background: 'rgba(255,183,77,0.18)',
+              border: '1px solid rgba(255,183,77,0.35)',
+              color: '#7a3e00'
+            }}
+          >
+            {error}
+          </p>
+        )}
+
         {success && (
-          <div className="mb-6 bg-green-50 p-4 rounded-xl border border-emerald-200">
-            <p className="text-emerald-700 font-semibold mb-3">{success}</p>
+          <div
+            className="mb-6 rounded-2xl px-4 py-4"
+            style={{ background: 'rgba(162,210,255,0.12)', border: '1px solid rgba(162,210,255,0.25)' }}
+          >
+            <p className="font-extrabold" style={{ color: '#333333' }}>{success}</p>
             <button
               onClick={() => navigate('/dashboard')}
-              className="px-6 py-2 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              className="mt-3 w-full py-3 rounded-2xl font-extrabold transition-transform"
+              style={{ background: '#A2D2FF', color: '#0b2a3a' }}
             >
               Kembali ke Dashboard
             </button>
@@ -448,10 +562,16 @@ const Attendance = () => {
         <button
           onClick={submitAttendance}
           disabled={loading || !photo || !location}
-          className="w-full p-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          className="w-full py-4 rounded-2xl font-extrabold text-lg transition-transform"
+          style={{
+            background: loading || !photo || !location ? 'rgba(126,176,232,0.35)' : '#7EB0E8',
+            color: '#ffffff',
+            boxShadow: '0 12px 30px rgba(126,176,232,0.25)'
+          }}
         >
-          {loading ? 'Mengirim...' : 'Kirim Absensi'}
+          {loading ? 'Mengirim...' : type === 'in' ? 'Check In' : 'Check Out'}
         </button>
+
       </div>
       <canvas ref={canvasRef} className="hidden" />
     </div>

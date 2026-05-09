@@ -18,14 +18,15 @@ const History = () => {
       try {
         const response = await axios.get('/attendance/history');
         let data = response.data || [];
+
         // Jika bukan admin, tampilkan hanya riwayat milik user tersebut
         if (user.role !== 'admin') {
-          data = data.filter(r => {
-            // beberapa backend mungkin mengembalikan user object atau user_id
+          data = data.filter((r) => {
             const ownerId = r.user?.id ?? r.user_id ?? r.userId;
             return String(ownerId) === String(user.id) || String(r.user?.nik) === String(user.nik);
           });
         }
+
         setAttendanceList(data);
       } catch (err) {
         setError('Gagal memuat history: ' + (err.response?.data?.message || err.message));
@@ -37,11 +38,7 @@ const History = () => {
     loadHistory();
   }, [user]);
 
-  const filteredList = filter === 'all'
-    ? attendanceList
-    : attendanceList.filter(item => item.type === filter);
-
-  // Delete and clear functionality removed as per requirement
+  const filteredList = filter === 'all' ? attendanceList : attendanceList.filter((item) => item.type === filter);
 
   const formatTime = (timestamp) => {
     if (!timestamp) return '-';
@@ -59,17 +56,22 @@ const History = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+      <div className="min-h-screen flex justify-center items-center" style={{ background: '#F8F9FA' }}>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-b-2"
+          style={{ borderColor: 'rgba(162,210,255,0.45)', borderBottomColor: '#7EB0E8' }}
+        />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-6">
-        <div className="max-w-2xl mx-auto bg-red-50 border border-red-200 rounded-2xl p-6">
-          <p className="text-red-700">{error}</p>
+      <div className="min-h-screen p-6" style={{ background: '#F8F9FA' }}>
+        <div className="max-w-2xl mx-auto bg-white/95 rounded-2xl p-6" style={{ border: '1px solid rgba(162,210,255,0.25)' }}>
+          <p className="font-extrabold" style={{ color: '#7a3e00' }}>
+            {error}
+          </p>
         </div>
       </div>
     );
@@ -79,77 +81,93 @@ const History = () => {
   const currentUserNik = user?.nik || '-';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-6">
+    <div className="min-h-screen p-3 sm:p-6" style={{ background: '#F8F9FA' }}>
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-green-100 mb-6">
-          <h1 className="text-3xl font-bold text-emerald-800 mb-2">Riwayat Absensi</h1>
-          <p className="text-emerald-600">Total: <span className="font-bold">{attendanceList.length}</span> records</p>
+        <div className="bg-white/95 rounded-2xl p-5 sm:p-8 shadow-xl mb-6" style={{ border: '1px solid rgba(162,210,255,0.25)' }}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#333333] mb-2">Riwayat Absensi</h1>
+          <p className="text-sm sm:text-base" style={{ color: 'rgba(0,0,0,0.65)' }}>
+            Total: <span className="font-extrabold">{attendanceList.length}</span> records
+          </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-green-100 mb-6">
-          <div className="flex flex-wrap gap-4 items-center justify-between mb-6">
-            <div className="flex gap-2">
+        <div className="bg-white/95 rounded-2xl p-4 sm:p-6 shadow-xl" style={{ border: '1px solid rgba(162,210,255,0.22)' }}>
+          <div className="flex flex-wrap gap-3 items-center justify-between mb-6">
+            <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setFilter('all')}
-                className={`px-6 py-2 rounded-xl font-semibold transition-all duration-200 ${
+                className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
+                style={
                   filter === 'all'
-                    ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg'
-                    : 'bg-green-100 text-emerald-700 hover:bg-green-200 border border-emerald-300'
-                }`}
+                    ? { background: 'linear-gradient(90deg, #A2D2FF, #BDE0FE)', color: '#ffffff', boxShadow: '0 10px 25px rgba(162,210,255,0.35)' }
+                    : { background: 'rgba(189,224,254,0.35)', color: '#0b2a3a', border: '1px solid rgba(162,210,255,0.25)' }
+                }
               >
                 Semua
               </button>
               <button
                 onClick={() => setFilter('in')}
-                className={`px-6 py-2 rounded-xl font-semibold transition-all duration-200 ${
+                className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
+                style={
                   filter === 'in'
-                    ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg'
-                    : 'bg-green-100 text-emerald-700 hover:bg-green-200 border border-emerald-300'
-                }`}
+                    ? { background: 'linear-gradient(90deg, #A2D2FF, #BDE0FE)', color: '#ffffff', boxShadow: '0 10px 25px rgba(162,210,255,0.35)' }
+                    : { background: 'rgba(189,224,254,0.35)', color: '#0b2a3a', border: '1px solid rgba(162,210,255,0.25)' }
+                }
               >
                 Masuk
               </button>
               <button
                 onClick={() => setFilter('out')}
-                className={`px-6 py-2 rounded-xl font-semibold transition-all duration-200 ${
+                className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
+                style={
                   filter === 'out'
-                    ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg'
-                    : 'bg-green-100 text-emerald-700 hover:bg-green-200 border border-emerald-300'
-                }`}
+                    ? { background: 'linear-gradient(90deg, #A2D2FF, #BDE0FE)', color: '#ffffff', boxShadow: '0 10px 25px rgba(162,210,255,0.35)' }
+                    : { background: 'rgba(189,224,254,0.35)', color: '#0b2a3a', border: '1px solid rgba(162,210,255,0.25)' }
+                }
               >
                 Keluar
               </button>
             </div>
-
           </div>
 
           {filteredList.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-emerald-600 text-lg font-semibold">Belum ada data absensi</p>
+              <p className="text-sm sm:text-base font-semibold" style={{ color: 'rgba(0,0,0,0.60)' }}>
+                Belum ada data absensi
+              </p>
             </div>
           ) : (
             <div className="space-y-3">
               {filteredList.map((record) => (
-                <div key={record.id} className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl border border-emerald-200 hover:border-emerald-400 hover:shadow-md transition-all duration-200">
+                <div
+                  key={record.id}
+                  className="p-4 rounded-2xl border transition-all duration-200"
+                  style={{ background: 'rgba(162,210,255,0.10)', borderColor: 'rgba(162,210,255,0.22)' }}
+                >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-lg font-bold px-3 py-1 rounded-lg" style={{backgroundColor: record.type === 'in' ? '#dcfce7' : '#fee2e2', color: record.type === 'in' ? '#16a34a' : '#dc2626'}}>
+                        <span
+                          className="text-lg font-bold px-3 py-1 rounded-lg"
+                          style={{
+                            backgroundColor: record.type === 'in' ? 'rgba(189,224,254,0.55)' : 'rgba(205,180,219,0.40)',
+                            color: record.type === 'in' ? '#0b2a3a' : '#6b2f5b'
+                          }}
+                        >
                           {record.type === 'in' ? 'MASUK' : 'KELUAR'}
                         </span>
                         <div>
-                          <p className="font-bold text-emerald-900">
+                          <p className="font-extrabold" style={{ color: '#333333' }}>
                             {record.type === 'in' ? 'Absensi Masuk' : 'Absensi Keluar'}
                           </p>
-                          <p className="text-sm text-emerald-700">
+                          <p className="text-sm" style={{ color: 'rgba(0,0,0,0.65)' }}>
                             {record.user?.name || currentUserName} ({record.user?.nik || currentUserNik})
                           </p>
                         </div>
                       </div>
-                      <p className="text-sm text-emerald-600 mb-2">
+                      <p className="text-sm" style={{ color: 'rgba(0,0,0,0.65)' }}>
                         Waktu: {formatTime(record.created_at)}
                       </p>
-                      <p className="text-xs text-emerald-600">
+                      <p className="text-xs" style={{ color: 'rgba(0,0,0,0.50)' }}>
                         Lokasi: {record.lat}, {record.lng}
                       </p>
                     </div>
@@ -163,7 +181,6 @@ const History = () => {
                           />
                         </div>
                       )}
-
                     </div>
                   </div>
                 </div>
@@ -172,23 +189,22 @@ const History = () => {
           )}
         </div>
 
-        {/* Stats */}
         {attendanceList.length > 0 && (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-green-100">
+          <div className="grid grid-cols-2 gap-4 mt-6">
+            <div className="bg-white/95 rounded-2xl p-6 shadow-xl border" style={{ borderColor: 'rgba(162,210,255,0.22)' }}>
               <div className="text-center">
-                <p className="text-emerald-600 text-sm font-semibold mb-1">Masuk</p>
-                <p className="text-3xl font-bold text-emerald-800">
-                  {attendanceList.filter(a => a.type === 'in').length}
+                <p className="text-sm font-semibold" style={{ color: '#0b2a3a' }}>
+                  Masuk
                 </p>
+                <p className="text-3xl font-extrabold text-[#333333]">{attendanceList.filter((a) => a.type === 'in').length}</p>
               </div>
             </div>
-            <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-green-100">
+            <div className="bg-white/95 rounded-2xl p-6 shadow-xl border" style={{ borderColor: 'rgba(162,210,255,0.22)' }}>
               <div className="text-center">
-                <p className="text-emerald-600 text-sm font-semibold mb-1">Keluar</p>
-                <p className="text-3xl font-bold text-emerald-800">
-                  {attendanceList.filter(a => a.type === 'out').length}
+                <p className="text-sm font-semibold" style={{ color: '#0b2a3a' }}>
+                  Keluar
                 </p>
+                <p className="text-3xl font-extrabold text-[#333333]">{attendanceList.filter((a) => a.type === 'out').length}</p>
               </div>
             </div>
           </div>
@@ -199,3 +215,4 @@ const History = () => {
 };
 
 export default History;
+
