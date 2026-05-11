@@ -13,6 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('user/profile', [AttendanceController::class, 'profile']);
     Route::post('attendance', [AttendanceController::class, 'store']);
     Route::get('attendance/history', [AttendanceController::class, 'history']);
+    Route::get('dashboard/stats', [AttendanceController::class, 'stats']);
 
     // Employee routes (admin only)
     Route::get('employees', [EmployeeController::class, 'index']);

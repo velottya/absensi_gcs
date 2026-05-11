@@ -1,9 +1,30 @@
 import { Link } from 'react-router-dom';
 import { FaCalendarAlt, FaClipboardList, FaHistory, FaMapMarkerAlt, FaUserCheck } from 'react-icons/fa';
 import { useAuth } from './AuthContext';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const [stats, setStats] = useState({});
+
+  useEffect(() => {
+    if (user?.role !== 'admin') return;
+
+    let mounted = true;
+    const load = async () => {
+      try {
+        const res = await axios.get('/dashboard/stats');
+        if (!mounted) return;
+        setStats(res.data || {});
+      } catch (err) {
+        console.error('Failed to load dashboard stats', err);
+      }
+    };
+
+    load();
+    return () => { mounted = false; };
+  }, [user]);
   const today = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
     day: 'numeric',
@@ -40,7 +61,7 @@ const Dashboard = () => {
             text={user?.role === 'admin' ? 'Kelola data' : 'Check in/out'}
             primary
           />
-          <QuickAction to="/leave" icon={FaCalendarAlt} label="Cuti" text="Ajukan izin" />
+          <QuickAction to="/leave" icon={FaCalendarAlt} label="Izin" text="Ajukan izin" />
           <QuickAction to="/history" icon={FaHistory} label="History" text="Riwayat absen" />
           <QuickAction to="/profile" icon={FaClipboardList} label="Profile" text="Akun & setting" />
         </section>
@@ -60,10 +81,39 @@ const Dashboard = () => {
             <Readiness label="Kamera" value="Wajib" />
           </div>
         </section>
+
+        {user?.role === 'admin' && (
+          <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+            <h3 className="font-black text-slate-900">Ringkasan Tim</h3>
+            <p className="text-sm text-slate-500">Sekilas kondisi tim hari ini</p>
+
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              <StatCard label="Hadir" value={stats.hadir ?? '-'} color="bg-emerald-50 text-emerald-700" />
+              <StatCard label="Terlambat" value={stats.terlambat ?? '-'} color="bg-amber-50 text-amber-700" />
+              <StatCard label="Izin" value={stats.izin ?? '-'} color="bg-sky-50 text-sky-700" />
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <StatCard label="Sakit" value={stats.sakit ?? '-'} color="bg-rose-50 text-rose-700" />
+              <StatCard label="Tidak Masuk" value={stats.tidak_masuk ?? '-'} color="bg-slate-50 text-slate-700" />
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
 };
+
+function StatCard({ label, value, color }) {
+  return (
+    <div className={[`rounded-2xl p-3`, color].join(' ')}>
+      <p className="text-xs font-bold text-slate-500">{label}</p>
+      <p className="mt-1 text-2xl font-black">{value}</p>
+    </div>
+  );
+}
+
+export default Dashboard;
 
 function StatusPill({ label, value }) {
   return (
@@ -100,5 +150,3 @@ function Readiness({ label, value }) {
     </div>
   );
 }
-
-export default Dashboard;

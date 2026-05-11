@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { FaCalendarAlt, FaFileUpload, FaInfoCircle, FaPaperPlane } from 'react-icons/fa';
+import { FaCalendarAlt, FaFileUpload, FaInfoCircle, FaPaperPlane, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
@@ -15,6 +15,8 @@ export default function Leave() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [leaves, setLeaves] = useState([]);
+  const [evidencePreview, setEvidencePreview] = useState('');
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   const totalDays = useMemo(() => {
     if (!form.startDate || !form.endDate) return 0;
@@ -47,6 +49,43 @@ export default function Leave() {
   const update = (key, value) => {
     setSubmitted(false);
     setForm((current) => ({ ...current, [key]: value }));
+  };
+
+  useEffect(() => {
+    // Create preview URL when evidence file changes
+    if (form.evidence) {
+      try {
+        const file = form.evidence;
+        if (file && file.type && file.type.startsWith('image/')) {
+          const url = URL.createObjectURL(file);
+          setEvidencePreview(url);
+        } else {
+          setEvidencePreview('');
+        }
+      } catch (e) {
+        setEvidencePreview('');
+      }
+    } else {
+      setEvidencePreview('');
+    }
+
+    return () => {
+      if (evidencePreview) {
+        URL.revokeObjectURL(evidencePreview);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.evidence]);
+
+  const removeEvidence = () => {
+    if (evidencePreview) URL.revokeObjectURL(evidencePreview);
+    setEvidencePreview('');
+    setForm((c) => ({ ...c, evidence: null }));
+  };
+
+  const openPreviewModal = () => {
+    if (!evidencePreview) return;
+    setShowPreviewModal(true);
   };
 
   const submitLeave = (event) => {
@@ -183,24 +222,74 @@ export default function Leave() {
               />
             </label>
 
-            <label className="mt-4 flex min-h-28 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-sky-200 bg-sky-50 px-4 text-center">
-              <FaFileUpload className="text-blue-700" size={24} />
-              <span className="mt-2 text-sm font-black text-slate-800">Upload bukti</span>
-              <span className="mt-1 text-xs font-semibold text-slate-500">
-                {form.evidence ? form.evidence.name : 'Surat dokter, dokumen, atau foto pendukung'}
-              </span>
-              <input
-                type="file"
-                accept="image/*,.pdf,.doc,.docx"
-                className="hidden"
-                onChange={(event) => update('evidence', event.target.files?.[0] || null)}
-              />
-            </label>
+            <div>
+              <label className="block mb-2">
+                <span className="mb-1 block text-sm font-extrabold text-slate-700">Bukti (opsional)</span>
+                {form.type === 'sakit' && <span className="ml-2 inline-block rounded px-2 py-0.5 text-xs font-bold text-white bg-rose-600">Wajib untuk Sakit</span>}
+              </label>
+
+              <div className="flex items-start gap-4">
+                <label className="flex-1">
+                  <div className="relative rounded-2xl border-2 border-dashed border-sky-200 bg-sky-50 p-3">
+                    {!evidencePreview && (
+                      <div className="flex flex-col items-center justify-center gap-2 py-6 text-center">
+                        <FaFileUpload className="text-blue-700" size={28} />
+                        <div className="text-sm font-black text-slate-800">Upload bukti</div>
+                        <div className="text-xs text-slate-500">Surat dokter, dokumen, atau foto pendukung</div>
+                      </div>
+                    )}
+
+                    {evidencePreview && (
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={evidencePreview}
+                          alt="Preview bukti"
+                          onClick={openPreviewModal}
+                          className="h-28 w-28 rounded-xl object-cover border cursor-pointer"
+                        />
+                        <div className="flex-1">
+                          <div className="font-bold text-slate-800">{form.evidence?.name}</div>
+                          <div className="text-xs text-slate-500 mt-1">{(form.evidence?.size / 1024).toFixed(1)} KB</div>
+                        </div>
+                        <button type="button" onClick={removeEvidence} className="ml-auto text-rose-600">
+                          <FaTimes />
+                        </button>
+                      </div>
+                    )}
+
+                    <input
+                      type="file"
+                      accept="image/*,.pdf,.doc,.docx"
+                      className="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
+                      onChange={(event) => update('evidence', event.target.files?.[0] || null)}
+                    />
+                  </div>
+                </label>
+              </div>
+            </div>
           </section>
 
           {submitted && (
             <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-extrabold text-emerald-700 shadow-sm">
               Ajukan izin berhasil dibuat
+            </div>
+          )}
+
+          {showPreviewModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-6">
+              <div className="max-w-3xl w-full rounded-[20px] bg-white p-4 shadow-2xl">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="font-black">Preview Bukti</div>
+                  <button type="button" onClick={() => setShowPreviewModal(false)} className="text-slate-700">Tutup</button>
+                </div>
+                <div className="overflow-auto">
+                  {evidencePreview ? (
+                    <img src={evidencePreview} alt="Preview full" className="w-full rounded-lg object-contain" />
+                  ) : (
+                    <div className="p-8 text-center text-slate-500">Tidak ada preview untuk file ini.</div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 

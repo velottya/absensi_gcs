@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const History = () => {
   const { user } = useAuth();
@@ -52,6 +55,55 @@ const History = () => {
       minute: '2-digit',
       second: '2-digit'
     });
+  };
+
+  const exportFilenameSuffix = useMemo(() => new Date().toISOString().slice(0, 10), []);
+
+  const exportToExcel = () => {
+    if (!filteredList.length) return;
+
+    const rows = filteredList.map((r, i) => ({
+      No: i + 1,
+      Nama: r.user?.name || currentUserName,
+      Tipe: r.type === 'in' ? 'MASUK' : 'KELUAR',
+      Waktu: formatTime(r.created_at),
+      Lokasi: `${r.lat || '-'}, ${r.lng || '-'}`,
+      Foto: r.foto ? 'Ada' : 'Tidak ada'
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    worksheet['!cols'] = [{ wch: 6 }, { wch: 24 }, { wch: 12 }, { wch: 24 }, { wch: 22 }, { wch: 12 }];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Riwayat Absensi');
+    XLSX.writeFile(workbook, `riwayat-absensi-${exportFilenameSuffix}.xlsx`);
+  };
+
+  const exportToPdf = () => {
+    if (!filteredList.length) return;
+
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+    doc.setFontSize(14);
+    doc.text('Laporan Riwayat Absensi', 40, 40);
+    doc.setFontSize(10);
+    doc.text(`Dicetak: ${new Date().toLocaleString('id-ID')}`, 40, 56);
+
+    autoTable(doc, {
+      startY: 74,
+      head: [['No', 'Nama', 'Tipe', 'Waktu', 'Lokasi', 'Foto']],
+      body: filteredList.map((r, i) => [
+        String(i + 1),
+        r.user?.name || currentUserName,
+        r.type === 'in' ? 'MASUK' : 'KELUAR',
+        formatTime(r.created_at),
+        `${r.lat || '-'}, ${r.lng || '-'}`,
+        r.foto ? 'Ada' : 'Tidak ada'
+      ]),
+      styles: { fontSize: 8, cellPadding: 4 },
+      headStyles: { fillColor: [30, 64, 175] },
+      margin: { left: 40, right: 40 }
+    });
+
+    doc.save(`riwayat-absensi-${exportFilenameSuffix}.pdf`);
   };
 
   const buildPhotoUrl = (fotoPath) => {
@@ -144,6 +196,24 @@ const History = () => {
                 }
               >
                 Keluar
+              </button>
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={exportToExcel}
+                disabled={!filteredList.length}
+                className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold disabled:opacity-50"
+              >
+                Export Excel
+              </button>
+              <button
+                type="button"
+                onClick={exportToPdf}
+                disabled={!filteredList.length}
+                className="px-4 py-2 rounded-xl bg-rose-600 text-white font-bold disabled:opacity-50"
+              >
+                Export PDF
               </button>
             </div>
           </div>
