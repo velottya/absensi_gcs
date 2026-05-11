@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { FaCalendarAlt, FaFileUpload, FaInfoCircle, FaPaperPlane } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import axios from 'axios';
 
 export default function Leave() {
   const { user } = useAuth();
@@ -12,6 +14,7 @@ export default function Leave() {
     evidence: null
   });
   const [submitted, setSubmitted] = useState(false);
+  const [leaves, setLeaves] = useState([]);
 
   const totalDays = useMemo(() => {
     if (!form.startDate || !form.endDate) return 0;
@@ -48,7 +51,36 @@ export default function Leave() {
 
   const submitLeave = (event) => {
     event.preventDefault();
-    setSubmitted(true);
+    const formData = new FormData();
+    formData.append('type', form.type);
+    formData.append('start_date', form.startDate);
+    formData.append('end_date', form.endDate);
+    formData.append('reason', form.reason || '');
+    if (form.evidence) formData.append('evidence', form.evidence);
+
+    axios.post('/leaves', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then(() => {
+        setSubmitted(true);
+        setForm({ type: 'tahunan', startDate: '', endDate: '', reason: '', evidence: null });
+        fetchLeaves();
+      })
+      .catch((err) => {
+        console.error(err);
+        alert('Gagal mengajukan cuti');
+      });
+  };
+
+  useEffect(() => {
+    fetchLeaves();
+  }, []);
+
+  const fetchLeaves = async () => {
+    try {
+      const res = await axios.get('/leaves');
+      setLeaves(res.data || []);
+    } catch (err) {
+      console.error('fetchLeaves error', err);
+    }
   };
 
   return (
@@ -64,6 +96,14 @@ export default function Leave() {
             <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full border-2 border-white/35 bg-white/20 shadow-inner ring-4 ring-white/12">
               <FaCalendarAlt size={25} />
             </span>
+          </div>
+          <div className="mt-4 flex">
+            <Link
+              to="/leave/history"
+              className="inline-flex items-center gap-2 rounded-2xl bg-white/15 px-4 py-2 text-sm font-extrabold text-white ring-1 ring-white/20 transition hover:bg-white/25"
+            >
+              Lihat riwayat cuti
+            </Link>
           </div>
         </section>
 
@@ -143,7 +183,7 @@ export default function Leave() {
               </span>
               <input
                 type="file"
-                accept="image/*,.pdf"
+                accept="image/*,.pdf,.doc,.docx"
                 className="hidden"
                 onChange={(event) => update('evidence', event.target.files?.[0] || null)}
               />
@@ -151,8 +191,8 @@ export default function Leave() {
           </section>
 
           {submitted && (
-            <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm font-bold text-blue-800">
-              Pengajuan cuti berhasil disiapkan. Integrasi kirim ke server bisa disambungkan ke API berikutnya.
+            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-extrabold text-emerald-700 shadow-sm">
+              Ajukan cuti berhasil dibuat
             </div>
           )}
 

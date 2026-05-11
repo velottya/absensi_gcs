@@ -9,6 +9,7 @@ import Employees from './components/Employees.jsx'
 import EmployeeDetail from './components/EmployeeDetail.jsx'
 import Settings from './components/Settings.jsx'
 import Leave from './components/Leave.jsx'
+import LeaveHistory from './components/LeaveHistory.jsx'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -48,6 +49,7 @@ function AppContent() {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/setting" element={<Settings />} />
                     <Route path="/leave" element={<Leave />} />
+                    <Route path="/leave/history" element={<LeaveHistory />} />
                     <Route path="*" element={<Navigate to="/dashboard" replace />} />
                   </Routes>
                 </main>

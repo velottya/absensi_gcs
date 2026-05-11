@@ -12,7 +12,9 @@ const navItems = [
 ];
 
 const adminNavItems = [
-  { key: 'employees', label: 'Karyawan', path: '/employees', icon: FaUserCheck },
+  { key: 'home', label: 'Home', path: '/dashboard', icon: FaHome },
+  { key: 'leave', label: 'Cuti', path: '/leave', icon: FaCalendarAlt },
+  { key: 'employees', label: 'Karyawan', path: '/employees', icon: FaUserCheck, center: true },
   { key: 'history', label: 'History', path: '/history', icon: FaHistory },
   { key: 'profile', label: 'Profile', path: '/profile', icon: FaRegUser }
 ];
