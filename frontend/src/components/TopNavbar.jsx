@@ -7,13 +7,13 @@ const navItems = [
   { key: 'home', label: 'Home', path: '/dashboard', icon: FaHome },
   { key: 'history', label: 'History', path: '/history', icon: FaHistory },
   { key: 'attendance', label: 'Absen', path: '/attendance', icon: FaUserCheck, center: true },
-  { key: 'leave', label: 'Cuti', path: '/leave', icon: FaCalendarAlt },
+  { key: 'leave', label: 'Izin', path: '/leave', icon: FaCalendarAlt },
   { key: 'profile', label: 'Profile', path: '/profile', icon: FaRegUser }
 ];
 
 const adminNavItems = [
   { key: 'home', label: 'Home', path: '/dashboard', icon: FaHome },
-  { key: 'leave', label: 'Cuti', path: '/leave', icon: FaCalendarAlt },
+  { key: 'leave', label: 'Izin', path: '/leave', icon: FaCalendarAlt },
   { key: 'employees', label: 'Karyawan', path: '/employees', icon: FaUserCheck, center: true },
   { key: 'history', label: 'History', path: '/history', icon: FaHistory },
   { key: 'profile', label: 'Profile', path: '/profile', icon: FaRegUser }
@@ -90,7 +90,7 @@ export default function TopNavbar() {
                 </div>
                 <div className="mt-3 space-y-2">
                   <NotificationItem title="Pengingat Absen" text="Pengingat check in dan check out akan tampil di sini." />
-                  <NotificationItem title="Status Cuti" text="Update persetujuan pengajuan cuti akan muncul otomatis." />
+                  <NotificationItem title="Status Izin" text="Update persetujuan pengajuan izin akan muncul otomatis." />
                 </div>
               </div>
             </div>

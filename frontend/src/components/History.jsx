@@ -54,6 +54,25 @@ const History = () => {
     });
   };
 
+  const buildPhotoUrl = (fotoPath) => {
+    if (!fotoPath) return '';
+
+    if (/^https?:\/\//i.test(fotoPath)) {
+      return fotoPath;
+    }
+
+    const normalizedPath = String(fotoPath).replace(/^\/+/, '');
+    const storagePath = normalizedPath.startsWith('storage/') ? normalizedPath : `storage/${normalizedPath}`;
+
+    try {
+      const base = axios.defaults.baseURL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+      const apiUrl = new URL(base);
+      return `${apiUrl.origin}/${storagePath}`;
+    } catch {
+      return `/${storagePath}`;
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center" style={{ background: '#F8F9FA' }}>
@@ -143,45 +162,44 @@ const History = () => {
                   className="p-4 rounded-2xl border transition-all duration-200"
                   style={{ background: 'rgba(162,210,255,0.10)', borderColor: 'rgba(162,210,255,0.22)' }}
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span
-                          className="text-lg font-bold px-3 py-1 rounded-lg"
-                          style={{
-                            backgroundColor: record.type === 'in' ? 'rgba(189,224,254,0.55)' : 'rgba(205,180,219,0.40)',
-                            color: record.type === 'in' ? '#0b2a3a' : '#6b2f5b'
-                          }}
-                        >
-                          {record.type === 'in' ? 'MASUK' : 'KELUAR'}
-                        </span>
-                        <div>
-                          <p className="font-extrabold" style={{ color: '#333333' }}>
-                            {record.type === 'in' ? 'Absensi Masuk' : 'Absensi Keluar'}
-                          </p>
-                          <p className="text-sm" style={{ color: 'rgba(0,0,0,0.65)' }}>
-                            {record.user?.name || currentUserName} ({record.user?.nik || currentUserNik})
-                          </p>
-                        </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span
+                        className="text-lg font-bold px-3 py-1 rounded-lg"
+                        style={{
+                          backgroundColor: record.type === 'in' ? 'rgba(189,224,254,0.55)' : 'rgba(205,180,219,0.40)',
+                          color: record.type === 'in' ? '#0b2a3a' : '#6b2f5b'
+                        }}
+                      >
+                        {record.type === 'in' ? 'MASUK' : 'KELUAR'}
+                      </span>
+                      <div>
+                        <p className="font-extrabold" style={{ color: '#333333' }}>
+                          {record.type === 'in' ? 'Absensi Masuk' : 'Absensi Keluar'}
+                        </p>
+                        <p className="text-sm" style={{ color: 'rgba(0,0,0,0.65)' }}>
+                          {record.user?.name || currentUserName} ({record.user?.nik || currentUserNik})
+                        </p>
                       </div>
-                      <p className="text-sm" style={{ color: 'rgba(0,0,0,0.65)' }}>
-                        Waktu: {formatTime(record.created_at)}
-                      </p>
-                      <p className="text-xs" style={{ color: 'rgba(0,0,0,0.50)' }}>
-                        Lokasi: {record.lat}, {record.lng}
-                      </p>
                     </div>
-                    <div className="flex gap-2">
-                      {record.foto && (
-                        <div className="relative group">
-                          <img
-                            src={`/storage/${record.foto}`}
-                            alt="Absensi"
-                            className="w-16 h-20 object-cover rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-all"
-                          />
-                        </div>
-                      )}
-                    </div>
+
+                    {record.foto && (
+                      <div className="mb-3">
+                        <img
+                          src={buildPhotoUrl(record.foto)}
+                          alt="Foto absensi"
+                          className="w-full h-36 sm:h-44 object-cover rounded-xl border shadow-md"
+                          style={{ borderColor: 'rgba(162,210,255,0.35)' }}
+                        />
+                      </div>
+                    )}
+
+                    <p className="text-sm" style={{ color: 'rgba(0,0,0,0.65)' }}>
+                      Waktu: {formatTime(record.created_at)}
+                    </p>
+                    <p className="text-xs" style={{ color: 'rgba(0,0,0,0.50)' }}>
+                      Lokasi: {record.lat}, {record.lng}
+                    </p>
                   </div>
                 </div>
               ))}

@@ -68,14 +68,14 @@ export default function LeaveHistory() {
         <section className="rounded-[28px] bg-gradient-to-br from-slate-900 via-blue-900 to-sky-700 p-5 text-white shadow-xl shadow-sky-200">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-sky-100">Riwayat Cuti</p>
+              <p className="text-sm font-semibold text-sky-100">Riwayat Izin</p>
               <h2 className="mt-1 text-2xl font-black">
-                {user?.role === 'admin' ? 'Riwayat Cuti Karyawan' : 'Pengajuan Saya'}
+                {user?.role === 'admin' ? 'Riwayat Izin Karyawan' : 'Pengajuan Saya'}
               </h2>
               <p className="mt-1 text-sm font-medium text-sky-50">
                 {user?.role === 'admin'
-                  ? 'Seluruh cuti karyawan ditampilkan di sini.'
-                  : 'Daftar cuti yang pernah Anda ajukan.'}
+                  ? 'Seluruh izin karyawan ditampilkan di sini.'
+                  : 'Daftar izin yang pernah Anda ajukan.'}
               </p>
             </div>
             <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full border-2 border-white/35 bg-white/20 shadow-inner ring-4 ring-white/12">
@@ -90,7 +90,7 @@ export default function LeaveHistory() {
             className="inline-flex items-center gap-2 rounded-2xl border border-sky-100 bg-white px-4 py-3 text-sm font-extrabold text-slate-800 shadow-sm"
           >
             <FaArrowLeft />
-            Kembali ke pengajuan cuti
+            Kembali ke pengajuan izin
           </Link>
         </div>
 
@@ -108,7 +108,7 @@ export default function LeaveHistory() {
 
         {!loading && !error && leaves.length === 0 && (
           <div className="rounded-[24px] border border-sky-100 bg-white p-5 text-center text-sm font-semibold text-slate-500 shadow-sm">
-            Belum ada riwayat cuti.
+            Belum ada riwayat izin.
           </div>
         )}
 
@@ -204,10 +204,13 @@ export default function LeaveHistory() {
 
 function formatLeaveType(type) {
   const labels = {
-    tahunan: 'Cuti Tahunan',
-    sakit: 'Cuti Sakit',
-    penting: 'Keperluan Penting',
-    melahirkan: 'Cuti Melahirkan',
+    'datang-terlambat': 'Datang Terlambat',
+    sakit: 'Sakit',
+    'tidak-masuk-kerja': 'Tidak Masuk Kerja',
+    'pulang-lebih-awal': 'Pulang Lebih Awal',
+    'meninggalkan-pekerjaan': 'Meninggalkan Pekerjaan',
+    'tidak-clocking-in': 'Tidak Clocking In',
+    'tidak-clocking-out': 'Tidak Clocking Out',
   };
 
   return labels[type] || type;
@@ -218,7 +221,7 @@ function renderEvidencePreview(leave, docxContainerRef) {
   const kind = getEvidenceKind(leave.evidence_path || source);
 
   if (kind === 'image') {
-    return <img src={source} alt="Bukti cuti" className="mx-auto max-h-[70vh] w-full rounded-2xl object-contain" />;
+    return <img src={source} alt="Bukti izin" className="mx-auto max-h-[70vh] w-full rounded-2xl object-contain" />;
   }
 
   if (kind === 'pdf') {

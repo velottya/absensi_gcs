@@ -1,5 +1,7 @@
 <?php
 
+$frontendOrigins = array_values(array_filter(array_map('trim', explode(',', env('FRONTEND_URLS', env('FRONTEND_URL', 'http://localhost:3000'))))));
+
 return [
 
     /*
@@ -19,7 +21,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
+    'allowed_origins' => $frontendOrigins,
 
     'allowed_origins_patterns' => [],
 

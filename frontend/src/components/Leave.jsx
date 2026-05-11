@@ -7,7 +7,7 @@ import axios from 'axios';
 export default function Leave() {
   const { user } = useAuth();
   const [form, setForm] = useState({
-    type: 'tahunan',
+    type: 'datang-terlambat',
     startDate: '',
     endDate: '',
     reason: '',
@@ -58,15 +58,20 @@ export default function Leave() {
     formData.append('reason', form.reason || '');
     if (form.evidence) formData.append('evidence', form.evidence);
 
+    if (form.type === 'sakit' && !form.evidence) {
+      alert('Untuk jenis izin Sakit, lampiran surat dokter wajib diunggah');
+      return;
+    }
+
     axios.post('/leaves', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(() => {
         setSubmitted(true);
-        setForm({ type: 'tahunan', startDate: '', endDate: '', reason: '', evidence: null });
+        setForm({ type: 'datang-terlambat', startDate: '', endDate: '', reason: '', evidence: null });
         fetchLeaves();
       })
       .catch((err) => {
         console.error(err);
-        alert('Gagal mengajukan cuti');
+        alert('Gagal mengajukan izin');
       });
   };
 
@@ -89,7 +94,7 @@ export default function Leave() {
         <section className="rounded-[28px] bg-gradient-to-br from-blue-700 via-sky-600 to-sky-400 p-5 text-white shadow-xl shadow-sky-200">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-sky-100">Pengajuan Cuti</p>
+              <p className="text-sm font-semibold text-sky-100">Pengajuan Izin</p>
               <h2 className="mt-1 text-2xl font-black">{user?.name || 'Karyawan'}</h2>
               <p className="mt-1 text-sm font-medium text-sky-50">Isi tanggal, keterangan, dan bukti pendukung.</p>
             </div>
@@ -102,7 +107,7 @@ export default function Leave() {
               to="/leave/history"
               className="inline-flex items-center gap-2 rounded-2xl bg-white/15 px-4 py-2 text-sm font-extrabold text-white ring-1 ring-white/20 transition hover:bg-white/25"
             >
-              Lihat riwayat cuti
+              Lihat riwayat izin
             </Link>
           </div>
         </section>
@@ -114,22 +119,25 @@ export default function Leave() {
                 <FaInfoCircle />
               </span>
               <div>
-                <h3 className="font-black text-slate-900">Detail Cuti</h3>
+                <h3 className="font-black text-slate-900">Detail Izin</h3>
                 <p className="text-sm font-medium text-slate-500">Pilih jenis dan rentang tanggal</p>
               </div>
             </div>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-extrabold text-slate-700">Jenis cuti</span>
+              <span className="mb-2 block text-sm font-extrabold text-slate-700">Jenis izin</span>
               <select
                 value={form.type}
                 onChange={(event) => update('type', event.target.value)}
                 className="h-12 w-full rounded-2xl border border-sky-100 bg-sky-50 px-4 font-bold text-slate-800 outline-none focus:border-blue-500"
               >
-                <option value="tahunan">Cuti Tahunan</option>
-                <option value="sakit">Cuti Sakit</option>
-                <option value="penting">Keperluan Penting</option>
-                <option value="melahirkan">Cuti Melahirkan</option>
+                <option value="datang-terlambat">Datang Terlambat</option>
+                <option value="sakit">Sakit</option>
+                <option value="tidak-masuk-kerja">Tidak Masuk Kerja</option>
+                <option value="pulang-lebih-awal">Pulang Lebih Awal</option>
+                <option value="meninggalkan-pekerjaan">Meninggalkan Pekerjaan</option>
+                <option value="tidak-clocking-in">Tidak Clocking In</option>
+                <option value="tidak-clocking-out">Tidak Clocking Out</option>
               </select>
             </label>
 
@@ -170,7 +178,7 @@ export default function Leave() {
                 value={form.reason}
                 onChange={(event) => update('reason', event.target.value)}
                 rows={5}
-                placeholder="Tuliskan alasan pengajuan cuti..."
+                placeholder="Tuliskan alasan pengajuan izin..."
                 className="w-full resize-none rounded-2xl border border-sky-100 bg-sky-50 px-4 py-3 font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:border-blue-500"
               />
             </label>
@@ -192,7 +200,7 @@ export default function Leave() {
 
           {submitted && (
             <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-extrabold text-emerald-700 shadow-sm">
-              Ajukan cuti berhasil dibuat
+              Ajukan izin berhasil dibuat
             </div>
           )}
 
@@ -201,7 +209,7 @@ export default function Leave() {
             className="flex h-14 w-full items-center justify-center gap-2 rounded-[22px] bg-blue-700 font-extrabold text-white shadow-lg shadow-blue-100"
           >
             <FaPaperPlane />
-            Ajukan Cuti
+            Ajukan Izin
           </button>
         </form>
       </div>

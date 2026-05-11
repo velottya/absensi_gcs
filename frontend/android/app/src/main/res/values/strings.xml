@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Absensi GCS</string>
+    <string name="title_activity_main">Absensi GCS</string>
+    <string name="package_name">com.absensi.gcs</string>
+    <string name="custom_url_scheme">com.absensi.gcs</string>
+</resources>

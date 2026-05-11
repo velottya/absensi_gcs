@@ -34,11 +34,11 @@ class LeaveController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'type' => 'required|string',
+            'type' => 'required|in:datang-terlambat,sakit,tidak-masuk-kerja,pulang-lebih-awal,meninggalkan-pekerjaan,tidak-clocking-in,tidak-clocking-out',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'nullable|string',
-            'evidence' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
+            'evidence' => 'required_if:type,sakit|nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
         ]);
 
         if ($validator->fails()) {

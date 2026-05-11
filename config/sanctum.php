@@ -5,6 +5,11 @@ use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Laravel\Sanctum\Http\Middleware\AuthenticateSession;
 use Laravel\Sanctum\Sanctum;
 
+$frontendOrigins = array_values(array_filter(array_map('trim', explode(',', env('FRONTEND_URLS', env('FRONTEND_URL', 'http://localhost:3000'))))));
+$frontendHosts = array_values(array_unique(array_filter(array_map(function ($origin) {
+    return parse_url($origin, PHP_URL_HOST) ?: $origin;
+}, $frontendOrigins))));
+
 return [
 
     /*
@@ -18,11 +23,10 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:3000,127.0.0.1:8000,::1',
-        Sanctum::currentApplicationUrlWithPort(),
-        env('FRONTEND_URL') ? ','.parse_url(env('FRONTEND_URL'), PHP_URL_HOST) : ''
+    'stateful' => array_values(array_unique(array_merge(
+        explode(',', env('SANCTUM_STATEFUL_DOMAINS', 'localhost,localhost:3000,127.0.0.1,127.0.0.1:3000,127.0.0.1:8000,::1')),
+        [Sanctum::currentApplicationUrlWithPort()],
+        $frontendHosts
     ))),
 
     /*
