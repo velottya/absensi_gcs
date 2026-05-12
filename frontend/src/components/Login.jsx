@@ -28,7 +28,7 @@ const Login = () => {
         <div className="bg-white/90 backdrop-blur-lg rounded-lg p-8 shadow-md mb-6" style={{ border: '1px solid rgba(7,155,76,0.20)' }}>
           <div className="text-center mb-8">
             <h1 className="text-3xl font-extrabold" style={{ color: '#173224' }}>Absensi</h1>
-            <p className="text-sm sm:text-base" style={{ color: 'rgba(0,0,0,0.65)' }}>Sistem Absensi Geo-Selfie</p>
+            <p className="text-sm sm:text-base" style={{ color: 'rgba(0,0,0,0.65)' }}>Sistem Absensi PT GCS</p>
           </div>
 
 

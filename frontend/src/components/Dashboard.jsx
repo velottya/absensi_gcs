@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaCalendarAlt, FaClipboardList, FaHistory, FaMapMarkerAlt, FaUserCheck } from 'react-icons/fa';
+import { FaCalendarAlt, FaClipboardList, FaHistory, FaMapMarkerAlt, FaUserCheck, FaUsers } from 'react-icons/fa';
 import { useAuth } from './AuthContext';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -56,7 +56,7 @@ const Dashboard = () => {
         <section className="grid grid-cols-2 gap-3">
           <QuickAction
             to={user?.role === 'admin' ? '/employees' : '/attendance'}
-            icon={user?.role === 'admin' ? FaClipboardList : FaUserCheck}
+            icon={user?.role === 'admin' ? FaUsers : FaUserCheck}
             label={user?.role === 'admin' ? 'Karyawan' : 'Absen'}
             text={user?.role === 'admin' ? 'Kelola data' : 'Check in/out'}
             primary

@@ -153,6 +153,63 @@ const History = () => {
   const totalMasuk = attendanceList.filter((a) => a.type === 'in').length;
   const totalKeluar = attendanceList.filter((a) => a.type === 'out').length;
   const isAdmin = user?.role === 'admin';
+  const filterControls = (
+    <div className="flex gap-2 flex-wrap">
+      <button
+        onClick={() => setFilter('all')}
+        className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
+        style={
+          filter === 'all'
+            ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
+            : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
+        }
+      >
+        Semua
+      </button>
+      <button
+        onClick={() => setFilter('in')}
+        className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
+        style={
+          filter === 'in'
+            ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
+            : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
+        }
+      >
+        Masuk
+      </button>
+      <button
+        onClick={() => setFilter('out')}
+        className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
+        style={
+          filter === 'out'
+            ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
+            : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
+        }
+      >
+        Keluar
+      </button>
+    </div>
+  );
+  const exportControls = (
+    <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
+      <button
+        type="button"
+        onClick={exportToExcel}
+        disabled={!filteredList.length}
+        className="h-11 rounded-xl bg-emerald-600 px-4 text-sm font-bold text-white disabled:opacity-50 sm:w-32"
+      >
+        Export Excel
+      </button>
+      <button
+        type="button"
+        onClick={exportToPdf}
+        disabled={!filteredList.length}
+        className="h-11 rounded-xl bg-rose-600 px-4 text-sm font-bold text-white disabled:opacity-50 sm:w-32"
+      >
+        Export PDF
+      </button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen p-3 sm:p-6" style={{ background: '#f2fbf6' }}>
@@ -166,41 +223,7 @@ const History = () => {
 
         <div className="bg-white/95 rounded-lg p-4 sm:p-6 shadow-md" style={{ border: '1px solid rgba(7,155,76,0.24)' }}>
           <div className="flex flex-wrap gap-3 items-center justify-between mb-6">
-            <div className="flex gap-2 flex-wrap">
-              <button
-                onClick={() => setFilter('all')}
-                className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
-                style={
-                  filter === 'all'
-                    ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
-                    : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
-                }
-              >
-                Semua
-              </button>
-              <button
-                onClick={() => setFilter('in')}
-                className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
-                style={
-                  filter === 'in'
-                    ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
-                    : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
-                }
-              >
-                Masuk
-              </button>
-              <button
-                onClick={() => setFilter('out')}
-                className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
-                style={
-                  filter === 'out'
-                    ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
-                    : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
-                }
-              >
-                Keluar
-              </button>
-            </div>
+            {isAdmin ? exportControls : filterControls}
             <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
               <div className="grid flex-1 grid-cols-2 gap-2 sm:flex-none">
                 <div className="rounded-lg border bg-white px-4 py-2 text-center" style={{ borderColor: 'rgba(7,155,76,0.24)' }}>
@@ -216,26 +239,7 @@ const History = () => {
                   <p className="text-xl font-extrabold text-[#173224]">{totalKeluar}</p>
                 </div>
               </div>
-              {isAdmin && (
-                <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
-                  <button
-                    type="button"
-                    onClick={exportToExcel}
-                    disabled={!filteredList.length}
-                    className="h-11 rounded-xl bg-emerald-600 px-4 text-sm font-bold text-white disabled:opacity-50 sm:w-32"
-                  >
-                    Export Excel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={exportToPdf}
-                    disabled={!filteredList.length}
-                    className="h-11 rounded-xl bg-rose-600 px-4 text-sm font-bold text-white disabled:opacity-50 sm:w-32"
-                  >
-                    Export PDF
-                  </button>
-                </div>
-              )}
+              {isAdmin && filterControls}
             </div>
           </div>
 
