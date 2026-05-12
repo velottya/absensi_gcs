@@ -130,10 +130,10 @@ function QuickAction({ to, icon: Icon, label, text, primary }) {
       to={to}
       className={[
         'rounded-lg border p-4 shadow-sm transition active:scale-[0.98]',
-        primary ? 'border-[#f6ae45] bg-[#f6ae45] text-slate-900 ' : 'border-sky-100 bg-white text-slate-900'
+        primary ? 'border-[#f6ae45] bg-[#fff4df] text-slate-900 ' : 'border-sky-100 bg-white text-slate-900'
       ].join(' ')}
     >
-      <span className={primary ? 'grid h-11 w-11 place-items-center rounded-lg bg-[#fff4df] text-[#f6ae45]' : 'grid h-11 w-11 place-items-center rounded-lg bg-blue-50 text-blue-700'}>
+      <span className={primary ? 'grid h-11 w-11 place-items-center rounded-lg bg-[#ffebc7] text-[#f6ae45]' : 'grid h-11 w-11 place-items-center rounded-lg bg-blue-50 text-blue-700'}>
         <Icon />
       </span>
       <p className="mt-3 text-lg font-black">{label}</p>
