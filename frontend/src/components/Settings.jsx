@@ -52,14 +52,14 @@ export default function Settings() {
         icon: FaCamera,
         title: 'Kamera Selfie',
         text: 'Dipakai saat check in dan check out karyawan.',
-        status: 'Wajib'
+        status: 'Aktif'
       },
-      {
-        icon: FaBell,
-        title: 'Notifikasi',
-        text: notificationStatus === 'granted' ? 'Pengingat bisa dikirim oleh perangkat.' : 'Izinkan agar pengingat absen berjalan.',
-        status: notificationStatus === 'granted' ? 'Diizinkan' : 'Belum'
-      }
+    //   {
+    //     icon: FaBell,
+    //     title: 'Notifikasi',
+    //     text: notificationStatus === 'granted' ? 'Pengingat bisa dikirim oleh perangkat.' : 'Izinkan agar pengingat absen berjalan.',
+    //     status: notificationStatus === 'granted' ? 'Diizinkan' : 'Belum'
+    //   }
     ],
     [notificationStatus, settings.autoLocation]
   );
@@ -81,7 +81,7 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-[#f2fbf6] px-4 py-5">
       <div className="mx-auto max-w-md space-y-4">
-        <section className="overflow-hidden rounded-lg border border-blue-800 bg-blue-700 p-5 text-white shadow-md ">
+        {/* <section className="overflow-hidden rounded-lg border border-blue-800 bg-blue-700 p-5 text-white shadow-md ">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-sky-100">Pengaturan akun</p>
@@ -97,19 +97,19 @@ export default function Settings() {
             <InfoPill label="Masuk" value={effectiveWorkStart} />
             <InfoPill label="Pulang" value={settings.workEnd} />
           </div>
-        </section>
+        </section> */}
 
         <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h3 className="text-lg font-black text-slate-900">Preferensi Absen</h3>
-              <p className="text-sm font-medium text-slate-500">{saved ? 'Tersimpan otomatis' : 'Atur pengalaman aplikasi'}</p>
+              {/* <p className="text-sm font-medium text-slate-500">{saved ? 'Tersimpan otomatis' : 'Atur pengalaman aplikasi'}</p> */}
             </div>
-            <FaUserCheck className="text-blue-600" size={22} />
+            {/* <FaUserCheck className="text-blue-600" size={22} /> */}
           </div>
 
           <div className="space-y-3">
-            <ToggleRow
+            {/* <ToggleRow
               title="Pengingat masuk"
               text="Sebelum jam masuk"
               checked={settings.reminderIn}
@@ -120,7 +120,7 @@ export default function Settings() {
               text="Sebelum jam pulang"
               checked={settings.reminderOut}
               onChange={(value) => update('reminderOut', value)}
-            />
+            /> */}
             <ToggleRow
               title="Ambil lokasi otomatis"
               text="GPS langsung dibaca saat membuka halaman absen"
@@ -128,10 +128,10 @@ export default function Settings() {
               onChange={(value) => update('autoLocation', value)}
             />
             <ToggleRow
-              title="Simpan preview foto"
-              text="Preview selfie tetap terlihat sebelum dikirim"
+              title="Mode gelap"
+              text="Tampilan menggunakan latar belakang gelap"
               checked={settings.savePhotoPreview}
-              onChange={(value) => update('savePhotoPreview', value)}
+              onChange={(value) => update('darkMode', value)}
             />
           </div>
         </section>
@@ -143,7 +143,7 @@ export default function Settings() {
             </span>
             <div>
               <h3 className="font-black text-slate-900">Jam Kerja</h3>
-              <p className="text-sm font-medium text-slate-500">Dipakai untuk pengingat harian</p>
+              {/* <p className="text-sm font-medium text-slate-500">Dipakai untuk pengingat harian</p> */}
             </div>
           </div>
 
@@ -152,12 +152,12 @@ export default function Settings() {
             <TimeField label="Pulang" value={settings.workEnd} onChange={(value) => update('workEnd', value)} />
           </div>
 
-          <div className="mt-3 rounded-lg bg-blue-50 p-3">
+          {/* <div className="mt-3 rounded-lg bg-blue-50 p-3">
             <p className="text-sm font-extrabold text-slate-700">Pengingat otomatis</p>
             <p className="mt-1 text-sm font-semibold text-slate-500">
               Sebelum jam masuk dan sebelum jam pulang.
             </p>
-          </div>
+          </div> */}
 
           <div className="mt-3">
             <label className="mb-2 block text-sm font-extrabold text-slate-700">Default tipe absen</label>
@@ -176,9 +176,8 @@ export default function Settings() {
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h3 className="font-black text-slate-900">Perangkat</h3>
-              <p className="text-sm font-medium text-slate-500">Kesiapan iOS dan Android</p>
             </div>
-            <FaShieldAlt className="text-blue-600" />
+            {/* <FaShieldAlt className="text-blue-600" /> */}
           </div>
 
           <div className="space-y-3">
@@ -187,13 +186,13 @@ export default function Settings() {
             ))}
           </div>
 
-          <button
+          {/* <button
             type="button"
             onClick={requestNotification}
             className="mt-4 h-12 w-full rounded-lg bg-blue-700 font-extrabold text-white shadow-sm  transition active:scale-[0.98]"
           >
             Izinkan Notifikasi
-          </button>
+          </button> */}
         </section>
 
       </div>

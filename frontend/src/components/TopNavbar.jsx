@@ -58,14 +58,14 @@ export default function TopNavbar() {
           </button>
 
           <div className="flex items-center gap-2">
-            <button
+            {/* <button
               type="button"
               onClick={() => setNotificationOpen((value) => !value)}
               className="grid h-10 w-10 place-items-center rounded-full border border-sky-100 bg-sky-50 text-sky-700 shadow-sm"
               aria-label="Notifikasi"
             >
               <FaBell size={15} />
-            </button>
+            </button> */}
             <button
               type="button"
               onClick={() => navigate('/profile')}
@@ -77,7 +77,7 @@ export default function TopNavbar() {
           </div>
         </div>
 
-        {notificationOpen && (
+        {/* {notificationOpen && (
           <div className="fixed inset-x-0 top-[74px] z-50 px-5">
             <div className="mx-auto max-w-md">
               <div className="rounded-lg border border-sky-100 bg-white p-4 shadow-md ">
@@ -95,7 +95,7 @@ export default function TopNavbar() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </header>
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-sky-100 bg-white px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 shadow-sm">
