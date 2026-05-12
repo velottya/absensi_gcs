@@ -2,10 +2,20 @@ import { useMemo, useState, useEffect } from 'react';
 import { FaCalendarAlt, FaFileUpload, FaInfoCircle, FaPaperPlane, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import LeaveHistory from './LeaveHistory';
 import axios from 'axios';
 
 export default function Leave() {
   const { user } = useAuth();
+
+  if (user?.role === 'admin') {
+    return <LeaveHistory showBackLink={false} />;
+  }
+
+  return <LeaveForm user={user} />;
+}
+
+function LeaveForm({ user }) {
   const [form, setForm] = useState({
     type: 'datang-terlambat',
     startDate: '',

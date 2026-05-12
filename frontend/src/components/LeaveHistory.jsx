@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export default function LeaveHistory() {
+export default function LeaveHistory({ showBackLink = true }) {
   const { user } = useAuth();
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +19,7 @@ export default function LeaveHistory() {
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const docxContainerRef = useRef(null);
+  const isAdmin = user?.role === 'admin';
 
   const filteredLeaves = useMemo(() => {
     const query = searchText.trim().toLowerCase();
@@ -204,15 +205,18 @@ export default function LeaveHistory() {
           </div>
         </section>
 
-        <div>
-          <Link
-            to="/leave"
-            className="inline-flex items-center gap-2 rounded-lg border border-sky-100 bg-white px-4 py-3 text-sm font-extrabold text-slate-800 shadow-sm"
-          >
-            <FaArrowLeft />
-            Kembali ke pengajuan izin
-          </Link>
-        </div>
+        {showBackLink && (
+          <div>
+            <Link
+              to="/leave"
+              aria-label="Kembali"
+              title="Kembali"
+              className="grid h-11 w-11 place-items-center rounded-lg border border-sky-100 bg-white text-slate-800 shadow-sm"
+            >
+              <FaArrowLeft />
+            </Link>
+          </div>
+        )}
 
         {!loading && !error && leaves.length > 0 && (
           <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
@@ -251,24 +255,26 @@ export default function LeaveHistory() {
                   Menampilkan <span className="font-black text-slate-800">{filteredLeaves.length}</span> dari{' '}
                   <span className="font-black text-slate-800">{leaves.length}</span> data
                 </p>
-                <div className="flex flex-wrap items-center justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={exportToExcel}
-                    disabled={!filteredLeaves.length}
-                    className="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Export Excel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={exportToPdf}
-                    disabled={!filteredLeaves.length}
-                    className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Export PDF
-                  </button>
-                </div>
+                {isAdmin && (
+                  <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={exportToExcel}
+                      disabled={!filteredLeaves.length}
+                      className="h-10 w-full rounded-lg bg-emerald-600 px-3 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50 sm:w-28"
+                    >
+                      Export Excel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={exportToPdf}
+                      disabled={!filteredLeaves.length}
+                      className="h-10 w-full rounded-lg bg-rose-600 px-3 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50 sm:w-28"
+                    >
+                      Export PDF
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </section>
@@ -338,12 +344,9 @@ export default function LeaveHistory() {
                       className="w-full max-h-44 object-cover rounded-xl border shadow-sm cursor-pointer"
                     />
                   ) : (
-                    <div className="flex items-center gap-3 rounded-xl border p-3 bg-white">
-                      <FaFileAlt className="text-slate-700" />
-                      <div className="text-sm font-semibold text-slate-700">{getFileName(leave.evidence_path || leave.evidence_url)}</div>
-                      <a href={leave.evidence_url} target="_blank" rel="noreferrer" className="ml-auto text-xs text-blue-700 font-bold">
-                        Buka / Unduh
-                      </a>
+                    <div className="flex items-start gap-3 rounded-xl border bg-white p-3">
+                      <FaFileAlt className="mt-0.5 shrink-0 text-slate-700" />
+                      <div className="min-w-0 flex-1 break-all text-sm font-semibold text-slate-700">{getFileName(leave.evidence_path || leave.evidence_url)}</div>
                     </div>
                   )}
                   <div className="mt-2 text-xs text-slate-500 flex items-center gap-3">
@@ -397,13 +400,13 @@ export default function LeaveHistory() {
                 {renderEvidencePreview(previewLeave, docxContainerRef)}
               </div>
 
-              <div className="flex items-center justify-between gap-3 border-t border-slate-100 px-5 py-4">
-                <p className="text-xs font-semibold text-slate-500">File: {getFileName(previewLeave.evidence_path || previewLeave.evidence_url)}</p>
+              <div className="flex flex-col gap-3 border-t border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="min-w-0 break-all text-xs font-semibold text-slate-500">File: {getFileName(previewLeave.evidence_path || previewLeave.evidence_url)}</p>
                 <a
                   href={previewLeave.evidence_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-extrabold text-white"
+                  className="inline-flex justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-extrabold text-white sm:shrink-0"
                 >
                   Buka / Unduh
                 </a>

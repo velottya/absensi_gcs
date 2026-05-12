@@ -150,6 +150,9 @@ const History = () => {
 
   const currentUserName = user?.name || 'Karyawan';
   const currentUserNik = user?.nik || '-';
+  const totalMasuk = attendanceList.filter((a) => a.type === 'in').length;
+  const totalKeluar = attendanceList.filter((a) => a.type === 'out').length;
+  const isAdmin = user?.role === 'admin';
 
   return (
     <div className="min-h-screen p-3 sm:p-6" style={{ background: '#f2fbf6' }}>
@@ -198,23 +201,41 @@ const History = () => {
                 Keluar
               </button>
             </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={exportToExcel}
-                disabled={!filteredList.length}
-                className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold disabled:opacity-50"
-              >
-                Export Excel
-              </button>
-              <button
-                type="button"
-                onClick={exportToPdf}
-                disabled={!filteredList.length}
-                className="px-4 py-2 rounded-xl bg-rose-600 text-white font-bold disabled:opacity-50"
-              >
-                Export PDF
-              </button>
+            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+              <div className="grid flex-1 grid-cols-2 gap-2 sm:flex-none">
+                <div className="rounded-lg border bg-white px-4 py-2 text-center" style={{ borderColor: 'rgba(7,155,76,0.24)' }}>
+                  <p className="text-xs font-semibold" style={{ color: '#05773a' }}>
+                    Masuk
+                  </p>
+                  <p className="text-xl font-extrabold text-[#173224]">{totalMasuk}</p>
+                </div>
+                <div className="rounded-lg border bg-white px-4 py-2 text-center" style={{ borderColor: 'rgba(7,155,76,0.24)' }}>
+                  <p className="text-xs font-semibold" style={{ color: '#05773a' }}>
+                    Keluar
+                  </p>
+                  <p className="text-xl font-extrabold text-[#173224]">{totalKeluar}</p>
+                </div>
+              </div>
+              {isAdmin && (
+                <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={exportToExcel}
+                    disabled={!filteredList.length}
+                    className="h-11 rounded-xl bg-emerald-600 px-4 text-sm font-bold text-white disabled:opacity-50 sm:w-32"
+                  >
+                    Export Excel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={exportToPdf}
+                    disabled={!filteredList.length}
+                    className="h-11 rounded-xl bg-rose-600 px-4 text-sm font-bold text-white disabled:opacity-50 sm:w-32"
+                  >
+                    Export PDF
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -277,30 +298,9 @@ const History = () => {
           )}
         </div>
 
-        {attendanceList.length > 0 && (
-          <div className="grid grid-cols-2 gap-4 mt-6">
-            <div className="bg-white/95 rounded-lg p-6 shadow-md border" style={{ borderColor: 'rgba(7,155,76,0.24)' }}>
-              <div className="text-center">
-                <p className="text-sm font-semibold" style={{ color: '#05773a' }}>
-                  Masuk
-                </p>
-                <p className="text-3xl font-extrabold text-[#173224]">{attendanceList.filter((a) => a.type === 'in').length}</p>
-              </div>
-            </div>
-            <div className="bg-white/95 rounded-lg p-6 shadow-md border" style={{ borderColor: 'rgba(7,155,76,0.24)' }}>
-              <div className="text-center">
-                <p className="text-sm font-semibold" style={{ color: '#05773a' }}>
-                  Keluar
-                </p>
-                <p className="text-3xl font-extrabold text-[#173224]">{attendanceList.filter((a) => a.type === 'out').length}</p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
 };
 
 export default History;
-
