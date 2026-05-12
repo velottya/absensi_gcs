@@ -17,6 +17,7 @@ const defaultSettings = {
 
 export default function Settings() {
   const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const [settings, setSettings] = useState(defaultSettings);
   const [saved, setSaved] = useState(false);
   const [notificationStatus, setNotificationStatus] = useState(() => getNotificationStatus());
@@ -159,17 +160,19 @@ export default function Settings() {
             </p>
           </div> */}
 
-          <div className="mt-3">
-            <label className="mb-2 block text-sm font-extrabold text-slate-700">Default tipe absen</label>
-            <select
-              value={settings.defaultAttendance}
-              onChange={(event) => update('defaultAttendance', event.target.value)}
-              className="h-12 w-full rounded-lg border border-sky-100 bg-sky-50 px-4 font-bold text-slate-800 outline-none focus:border-blue-500"
-            >
-              <option value="in">Check In</option>
-              <option value="out">Check Out</option>
-            </select>
-          </div>
+          {!isAdmin && (
+            <div className="mt-3">
+              <label className="mb-2 block text-sm font-extrabold text-slate-700">Default tipe absen</label>
+              <select
+                value={settings.defaultAttendance}
+                onChange={(event) => update('defaultAttendance', event.target.value)}
+                className="h-12 w-full rounded-lg border border-sky-100 bg-sky-50 px-4 font-bold text-slate-800 outline-none focus:border-blue-500"
+              >
+                <option value="in">Check In</option>
+                <option value="out">Check Out</option>
+              </select>
+            </div>
+          )}
         </section>
 
         <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
@@ -186,13 +189,13 @@ export default function Settings() {
             ))}
           </div>
 
-          {/* <button
+          <button
             type="button"
             onClick={requestNotification}
             className="mt-4 h-12 w-full rounded-lg bg-blue-700 font-extrabold text-white shadow-sm  transition active:scale-[0.98]"
           >
             Izinkan Notifikasi
-          </button> */}
+          </button>
         </section>
 
       </div>

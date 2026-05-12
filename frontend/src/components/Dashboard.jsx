@@ -48,7 +48,7 @@ const Dashboard = () => {
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-3">
-            <StatusPill label="Status" value="Siap Absen" />
+            <StatusPill label="Status" value="Karyawan" />
             <StatusPill label="Role" value={user?.role || 'Karyawan'} />
           </div>
         </section>
@@ -85,7 +85,7 @@ const Dashboard = () => {
         {user?.role === 'admin' && (
           <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
             <h3 className="font-black text-slate-900">Ringkasan Tim</h3>
-            <p className="text-sm text-slate-500">Sekilas kondisi tim hari ini</p>
+            <p className="text-sm text-slate-500">Kondisi tim hari ini</p>
 
             <div className="mt-4 grid grid-cols-3 gap-3">
               <StatCard label="Hadir" value={stats.hadir ?? '-'} color="bg-emerald-50 text-emerald-700" />
@@ -130,14 +130,14 @@ function QuickAction({ to, icon: Icon, label, text, primary }) {
       to={to}
       className={[
         'rounded-lg border p-4 shadow-sm transition active:scale-[0.98]',
-        primary ? 'border-blue-600 bg-blue-700 text-white ' : 'border-sky-100 bg-white text-slate-900'
+        primary ? 'border-[#f6ae45] bg-[#f6ae45] text-slate-900 ' : 'border-sky-100 bg-white text-slate-900'
       ].join(' ')}
     >
-      <span className={primary ? 'grid h-11 w-11 place-items-center rounded-lg bg-white/18' : 'grid h-11 w-11 place-items-center rounded-lg bg-blue-50 text-blue-700'}>
+      <span className={primary ? 'grid h-11 w-11 place-items-center rounded-lg bg-[#fff4df] text-[#f6ae45]' : 'grid h-11 w-11 place-items-center rounded-lg bg-blue-50 text-blue-700'}>
         <Icon />
       </span>
       <p className="mt-3 text-lg font-black">{label}</p>
-      <p className={primary ? 'text-sm font-semibold text-sky-100' : 'text-sm font-semibold text-slate-500'}>{text}</p>
+      <p className="text-sm font-semibold text-slate-500">{text}</p>
     </Link>
   );
 }
