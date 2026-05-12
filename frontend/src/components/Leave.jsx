@@ -128,9 +128,9 @@ export default function Leave() {
   };
 
   return (
-    <div className="min-h-screen bg-[#eef6ff] px-4 py-5">
+    <div className="min-h-screen bg-[#f2fbf6] px-4 py-5">
       <div className="mx-auto max-w-md space-y-4">
-        <section className="rounded-[28px] bg-gradient-to-br from-blue-700 via-sky-600 to-sky-400 p-5 text-white shadow-xl shadow-sky-200">
+        <section className="rounded-lg border border-blue-800 bg-blue-700 p-5 text-white shadow-md ">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-sky-100">Pengajuan Izin</p>
@@ -144,7 +144,7 @@ export default function Leave() {
           <div className="mt-4 flex">
             <Link
               to="/leave/history"
-              className="inline-flex items-center gap-2 rounded-2xl bg-white/15 px-4 py-2 text-sm font-extrabold text-white ring-1 ring-white/20 transition hover:bg-white/25"
+              className="inline-flex items-center gap-2 rounded-lg bg-white/15 px-4 py-2 text-sm font-extrabold text-white ring-1 ring-white/20 transition hover:bg-white/25"
             >
               Lihat riwayat izin
             </Link>
@@ -152,9 +152,9 @@ export default function Leave() {
         </section>
 
         <form onSubmit={submitLeave} className="space-y-4">
-          <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+          <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
             <div className="mb-4 flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-700">
                 <FaInfoCircle />
               </span>
               <div>
@@ -168,7 +168,7 @@ export default function Leave() {
               <select
                 value={form.type}
                 onChange={(event) => update('type', event.target.value)}
-                className="h-12 w-full rounded-2xl border border-sky-100 bg-sky-50 px-4 font-bold text-slate-800 outline-none focus:border-blue-500"
+                className="h-12 w-full rounded-lg border border-sky-100 bg-sky-50 px-4 font-bold text-slate-800 outline-none focus:border-blue-500"
               >
                 <option value="datang-terlambat">Datang Terlambat</option>
                 <option value="sakit">Sakit</option>
@@ -185,7 +185,7 @@ export default function Leave() {
               <DateField label="Selesai" value={form.endDate} onChange={(value) => update('endDate', value)} />
             </div>
 
-            <div className="mt-4 rounded-[22px] border border-sky-100 bg-sky-50 p-3">
+            <div className="mt-4 rounded-lg border border-sky-100 bg-sky-50 p-3">
               <div className="mb-3 flex items-center justify-between">
                 <p className="font-black text-slate-900">{calendarDays.title}</p>
                 <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-blue-700">
@@ -204,13 +204,13 @@ export default function Leave() {
               </div>
             </div>
 
-            <div className="mt-3 rounded-2xl bg-blue-50 p-3">
+            <div className="mt-3 rounded-lg bg-blue-50 p-3">
               <p className="text-sm font-bold text-slate-500">Total kalender</p>
               <p className="text-2xl font-black text-blue-700">{totalDays} hari</p>
             </div>
           </section>
 
-          <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+          <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
             <label className="block">
               <span className="mb-2 block text-sm font-extrabold text-slate-700">Keterangan</span>
               <textarea
@@ -218,7 +218,7 @@ export default function Leave() {
                 onChange={(event) => update('reason', event.target.value)}
                 rows={5}
                 placeholder="Tuliskan alasan pengajuan izin..."
-                className="w-full resize-none rounded-2xl border border-sky-100 bg-sky-50 px-4 py-3 font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:border-blue-500"
+                className="w-full resize-none rounded-lg border border-sky-100 bg-sky-50 px-4 py-3 font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:border-blue-500"
               />
             </label>
 
@@ -230,7 +230,7 @@ export default function Leave() {
 
               <div className="flex items-start gap-4">
                 <label className="flex-1">
-                  <div className="relative rounded-2xl border-2 border-dashed border-sky-200 bg-sky-50 p-3">
+                  <div className="relative rounded-lg border-2 border-dashed border-sky-200 bg-sky-50 p-3">
                     {!evidencePreview && (
                       <div className="flex flex-col items-center justify-center gap-2 py-6 text-center">
                         <FaFileUpload className="text-blue-700" size={28} />
@@ -270,14 +270,14 @@ export default function Leave() {
           </section>
 
           {submitted && (
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-extrabold text-emerald-700 shadow-sm">
+            <div className="rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-extrabold text-emerald-700 shadow-sm">
               Ajukan izin berhasil dibuat
             </div>
           )}
 
           {showPreviewModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-6">
-              <div className="max-w-3xl w-full rounded-[20px] bg-white p-4 shadow-2xl">
+              <div className="max-w-3xl w-full rounded-lg bg-white p-4 shadow-md">
                 <div className="flex items-center justify-between mb-3">
                   <div className="font-black">Preview Bukti</div>
                   <button type="button" onClick={() => setShowPreviewModal(false)} className="text-slate-700">Tutup</button>
@@ -295,7 +295,7 @@ export default function Leave() {
 
           <button
             type="submit"
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-[22px] bg-blue-700 font-extrabold text-white shadow-lg shadow-blue-100"
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-blue-700 font-extrabold text-white shadow-sm "
           >
             <FaPaperPlane />
             Ajukan Izin
@@ -346,7 +346,7 @@ function DateField({ label, value, onChange }) {
         type="date"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-12 w-full rounded-2xl border border-sky-100 bg-sky-50 px-3 text-sm font-bold text-slate-800 outline-none focus:border-blue-500"
+        className="h-12 w-full rounded-lg border border-sky-100 bg-sky-50 px-3 text-sm font-bold text-slate-800 outline-none focus:border-blue-500"
       />
     </label>
   );

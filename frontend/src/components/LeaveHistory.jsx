@@ -183,9 +183,9 @@ export default function LeaveHistory() {
   }, [previewLeave]);
 
   return (
-    <div className="min-h-screen bg-[#eef6ff] px-4 py-5">
+    <div className="min-h-screen bg-[#f2fbf6] px-4 py-5">
       <div className="mx-auto max-w-md space-y-4">
-        <section className="rounded-[28px] bg-gradient-to-br from-slate-900 via-blue-900 to-sky-700 p-5 text-white shadow-xl shadow-sky-200">
+        <section className="rounded-lg border border-blue-800 bg-blue-700 p-5 text-white shadow-md ">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-sky-100">Riwayat Izin</p>
@@ -207,7 +207,7 @@ export default function LeaveHistory() {
         <div>
           <Link
             to="/leave"
-            className="inline-flex items-center gap-2 rounded-2xl border border-sky-100 bg-white px-4 py-3 text-sm font-extrabold text-slate-800 shadow-sm"
+            className="inline-flex items-center gap-2 rounded-lg border border-sky-100 bg-white px-4 py-3 text-sm font-extrabold text-slate-800 shadow-sm"
           >
             <FaArrowLeft />
             Kembali ke pengajuan izin
@@ -215,7 +215,7 @@ export default function LeaveHistory() {
         </div>
 
         {!loading && !error && leaves.length > 0 && (
-          <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+          <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
             <div className="space-y-3">
               <label className="block">
                 <span className="mb-2 block text-sm font-extrabold text-slate-700">Cari history</span>
@@ -224,7 +224,7 @@ export default function LeaveHistory() {
                   value={searchText}
                   onChange={(event) => setSearchText(event.target.value)}
                   placeholder="Cari nama, alasan, tanggal, atau jenis izin..."
-                  className="h-12 w-full rounded-2xl border border-sky-100 bg-sky-50 px-4 text-sm font-semibold text-slate-800 outline-none placeholder:text-slate-400 focus:border-blue-500"
+                  className="h-12 w-full rounded-lg border border-sky-100 bg-sky-50 px-4 text-sm font-semibold text-slate-800 outline-none placeholder:text-slate-400 focus:border-blue-500"
                 />
               </label>
 
@@ -234,7 +234,7 @@ export default function LeaveHistory() {
                   <select
                     value={typeFilter}
                     onChange={(event) => setTypeFilter(event.target.value)}
-                    className="h-12 w-full rounded-2xl border border-sky-100 bg-sky-50 px-4 text-sm font-bold text-slate-800 outline-none focus:border-blue-500"
+                    className="h-12 w-full rounded-lg border border-sky-100 bg-sky-50 px-4 text-sm font-bold text-slate-800 outline-none focus:border-blue-500"
                   >
                     <option value="all">Semua jenis</option>
                     {typeOptions.map((type) => (
@@ -256,7 +256,7 @@ export default function LeaveHistory() {
                     type="button"
                     onClick={exportToExcel}
                     disabled={!filteredLeaves.length}
-                    className="rounded-2xl bg-emerald-600 px-4 py-2 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Export Excel
                   </button>
@@ -264,7 +264,7 @@ export default function LeaveHistory() {
                     type="button"
                     onClick={exportToPdf}
                     disabled={!filteredLeaves.length}
-                    className="rounded-2xl bg-rose-600 px-4 py-2 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Export PDF
                   </button>
@@ -275,32 +275,32 @@ export default function LeaveHistory() {
         )}
 
         {loading && (
-          <div className="rounded-[24px] border border-sky-100 bg-white p-5 text-center font-semibold text-slate-500 shadow-sm">
+          <div className="rounded-lg border border-sky-100 bg-white p-5 text-center font-semibold text-slate-500 shadow-sm">
             Memuat riwayat izin...
           </div>
         )}
 
         {error && !loading && (
-          <div className="rounded-[24px] border border-rose-100 bg-rose-50 p-4 text-sm font-bold text-rose-700 shadow-sm">
+          <div className="rounded-lg border border-rose-100 bg-rose-50 p-4 text-sm font-bold text-rose-700 shadow-sm">
             {error}
           </div>
         )}
 
         {!loading && !error && leaves.length === 0 && (
-          <div className="rounded-[24px] border border-sky-100 bg-white p-5 text-center text-sm font-semibold text-slate-500 shadow-sm">
+          <div className="rounded-lg border border-sky-100 bg-white p-5 text-center text-sm font-semibold text-slate-500 shadow-sm">
             Belum ada riwayat izin.
           </div>
         )}
 
         {!loading && !error && leaves.length > 0 && filteredLeaves.length === 0 && (
-          <div className="rounded-[24px] border border-sky-100 bg-white p-5 text-center text-sm font-semibold text-slate-500 shadow-sm">
+          <div className="rounded-lg border border-sky-100 bg-white p-5 text-center text-sm font-semibold text-slate-500 shadow-sm">
             Tidak ada riwayat yang cocok dengan pencarian atau filter.
           </div>
         )}
 
         <section className="space-y-3">
           {filteredLeaves.map((leave) => (
-            <article key={leave.id} className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+            <article key={leave.id} className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-500">{leave.status}</p>
@@ -314,13 +314,13 @@ export default function LeaveHistory() {
                     {leave.start_date} - {leave.end_date}
                   </p>
                 </div>
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-sky-50 text-sky-700">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-sky-50 text-sky-700">
                   <FaFileAlt />
                 </span>
               </div>
 
               {leave.reason && (
-                <p className="mt-3 rounded-2xl bg-slate-50 p-3 text-sm font-medium text-slate-700">
+                <p className="mt-3 rounded-lg bg-slate-50 p-3 text-sm font-medium text-slate-700">
                   {leave.reason}
                 </p>
               )}
@@ -360,7 +360,7 @@ export default function LeaveHistory() {
                     setPreviewError('');
                     setPreviewLeave(leave);
                   }}
-                  className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-blue-700 px-4 py-2 text-sm font-extrabold text-white"
+                  className="mt-3 inline-flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-extrabold text-white"
                 >
                   <FaEye />
                   Lihat bukti
@@ -372,7 +372,7 @@ export default function LeaveHistory() {
 
         {previewLeave && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-6">
-            <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-[28px] bg-white shadow-2xl">
+            <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-lg bg-white shadow-md">
               <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-500">Lihat Bukti</p>
@@ -389,7 +389,7 @@ export default function LeaveHistory() {
 
               <div className="flex-1 overflow-auto bg-slate-50 p-4">
                 {previewError && (
-                  <div className="mb-4 rounded-2xl border border-amber-100 bg-amber-50 p-3 text-sm font-semibold text-amber-900">
+                  <div className="mb-4 rounded-lg border border-amber-100 bg-amber-50 p-3 text-sm font-semibold text-amber-900">
                     {previewError}
                   </div>
                 )}
@@ -403,7 +403,7 @@ export default function LeaveHistory() {
                   href={previewLeave.evidence_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex rounded-2xl bg-slate-900 px-4 py-2 text-sm font-extrabold text-white"
+                  className="inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-extrabold text-white"
                 >
                   Buka / Unduh
                 </a>
@@ -472,7 +472,7 @@ function renderEvidencePreview(leave, docxContainerRef) {
   const kind = getEvidenceKind(leave.evidence_path || source);
 
   if (kind === 'image') {
-    return <img src={source} alt="Bukti izin" className="mx-auto max-h-[70vh] w-full rounded-2xl object-contain" />;
+    return <img src={source} alt="Bukti izin" className="mx-auto max-h-[70vh] w-full rounded-lg object-contain" />;
   }
 
   if (kind === 'pdf') {
@@ -480,14 +480,14 @@ function renderEvidencePreview(leave, docxContainerRef) {
       <iframe
         title="Preview PDF"
         src={source}
-        className="h-[70vh] w-full rounded-2xl border border-slate-200 bg-white"
+        className="h-[70vh] w-full rounded-lg border border-slate-200 bg-white"
       />
     );
   }
 
   if (kind === 'docx') {
     return (
-      <div className="overflow-auto rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="overflow-auto rounded-lg border border-slate-200 bg-white p-4">
         <div ref={docxContainerRef} />
       </div>
     );
@@ -495,7 +495,7 @@ function renderEvidencePreview(leave, docxContainerRef) {
 
   if (kind === 'word') {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-700">
+      <div className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-700">
         File Word lama (.doc) tersimpan dengan benar, tetapi browser tidak bisa merender format ini secara native.
         Gunakan tombol Buka / Unduh untuk membukanya di aplikasi Word.
       </div>
@@ -503,7 +503,7 @@ function renderEvidencePreview(leave, docxContainerRef) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-700">
+    <div className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-700">
       Pratinjau tidak tersedia untuk tipe file ini.
     </div>
   );

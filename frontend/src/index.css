@@ -14,16 +14,15 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #F8F9FA;
-  color: #333333;
+  background: #f2fbf6;
+  color: #173224;
 }
 
 :root {
-  --app-bg: #F8F9FA;
-  --blue-1: #A2D2FF;
-  --blue-2: #BDE0FE;
-  --accent: #7EB0E8;
-  --purple: #CDB4DB;
-  --text: #333333;
+  --app-bg: #f2fbf6;
+  --blue-1: #d5f8e4;
+  --blue-2: #fce4bd;
+  --accent: #079b4c;
+  --purple: #f6ae45;
+  --text: #173224;
 }
-

@@ -127,10 +127,10 @@ const History = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center" style={{ background: '#F8F9FA' }}>
+      <div className="min-h-screen flex justify-center items-center" style={{ background: '#f2fbf6' }}>
         <div
           className="animate-spin rounded-full h-12 w-12 border-b-2"
-          style={{ borderColor: 'rgba(162,210,255,0.45)', borderBottomColor: '#7EB0E8' }}
+          style={{ borderColor: 'rgba(7,155,76,0.45)', borderBottomColor: '#079b4c' }}
         />
       </div>
     );
@@ -138,9 +138,9 @@ const History = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen p-6" style={{ background: '#F8F9FA' }}>
-        <div className="max-w-2xl mx-auto bg-white/95 rounded-2xl p-6" style={{ border: '1px solid rgba(162,210,255,0.25)' }}>
-          <p className="font-extrabold" style={{ color: '#7a3e00' }}>
+      <div className="min-h-screen p-6" style={{ background: '#f2fbf6' }}>
+        <div className="max-w-2xl mx-auto bg-white/95 rounded-lg p-6" style={{ border: '1px solid rgba(7,155,76,0.20)' }}>
+          <p className="font-extrabold" style={{ color: '#773e1b' }}>
             {error}
           </p>
         </div>
@@ -152,16 +152,16 @@ const History = () => {
   const currentUserNik = user?.nik || '-';
 
   return (
-    <div className="min-h-screen p-3 sm:p-6" style={{ background: '#F8F9FA' }}>
+    <div className="min-h-screen p-3 sm:p-6" style={{ background: '#f2fbf6' }}>
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white/95 rounded-2xl p-5 sm:p-8 shadow-xl mb-6" style={{ border: '1px solid rgba(162,210,255,0.25)' }}>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#333333] mb-2">Riwayat Absensi</h1>
+        <div className="bg-white/95 rounded-lg p-5 sm:p-8 shadow-md mb-6" style={{ border: '1px solid rgba(7,155,76,0.20)' }}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#173224] mb-2">Riwayat Absensi</h1>
           <p className="text-sm sm:text-base" style={{ color: 'rgba(0,0,0,0.65)' }}>
             Total: <span className="font-extrabold">{attendanceList.length}</span> records
           </p>
         </div>
 
-        <div className="bg-white/95 rounded-2xl p-4 sm:p-6 shadow-xl" style={{ border: '1px solid rgba(162,210,255,0.22)' }}>
+        <div className="bg-white/95 rounded-lg p-4 sm:p-6 shadow-md" style={{ border: '1px solid rgba(7,155,76,0.24)' }}>
           <div className="flex flex-wrap gap-3 items-center justify-between mb-6">
             <div className="flex gap-2 flex-wrap">
               <button
@@ -169,8 +169,8 @@ const History = () => {
                 className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
                 style={
                   filter === 'all'
-                    ? { background: 'linear-gradient(90deg, #A2D2FF, #BDE0FE)', color: '#ffffff', boxShadow: '0 10px 25px rgba(162,210,255,0.35)' }
-                    : { background: 'rgba(189,224,254,0.35)', color: '#0b2a3a', border: '1px solid rgba(162,210,255,0.25)' }
+                    ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
+                    : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
                 }
               >
                 Semua
@@ -180,8 +180,8 @@ const History = () => {
                 className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
                 style={
                   filter === 'in'
-                    ? { background: 'linear-gradient(90deg, #A2D2FF, #BDE0FE)', color: '#ffffff', boxShadow: '0 10px 25px rgba(162,210,255,0.35)' }
-                    : { background: 'rgba(189,224,254,0.35)', color: '#0b2a3a', border: '1px solid rgba(162,210,255,0.25)' }
+                    ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
+                    : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
                 }
               >
                 Masuk
@@ -191,8 +191,8 @@ const History = () => {
                 className="px-6 py-2 rounded-xl font-extrabold transition-all duration-200"
                 style={
                   filter === 'out'
-                    ? { background: 'linear-gradient(90deg, #A2D2FF, #BDE0FE)', color: '#ffffff', boxShadow: '0 10px 25px rgba(162,210,255,0.35)' }
-                    : { background: 'rgba(189,224,254,0.35)', color: '#0b2a3a', border: '1px solid rgba(162,210,255,0.25)' }
+                    ? { background: '#079b4c', color: '#ffffff', boxShadow: 'none' }
+                    : { background: 'rgba(7,155,76,0.14)', color: '#05773a', border: '1px solid rgba(7,155,76,0.20)' }
                 }
               >
                 Keluar
@@ -229,22 +229,22 @@ const History = () => {
               {filteredList.map((record) => (
                 <div
                   key={record.id}
-                  className="p-4 rounded-2xl border transition-all duration-200"
-                  style={{ background: 'rgba(162,210,255,0.10)', borderColor: 'rgba(162,210,255,0.22)' }}
+                  className="p-4 rounded-lg border transition-all duration-200"
+                  style={{ background: 'rgba(7,155,76,0.10)', borderColor: 'rgba(7,155,76,0.24)' }}
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span
                         className="text-lg font-bold px-3 py-1 rounded-lg"
                         style={{
-                          backgroundColor: record.type === 'in' ? 'rgba(189,224,254,0.55)' : 'rgba(205,180,219,0.40)',
-                          color: record.type === 'in' ? '#0b2a3a' : '#6b2f5b'
+                          backgroundColor: record.type === 'in' ? 'rgba(7,155,76,0.18)' : 'rgba(246,174,69,0.25)',
+                          color: record.type === 'in' ? '#05773a' : '#b85d18'
                         }}
                       >
                         {record.type === 'in' ? 'MASUK' : 'KELUAR'}
                       </span>
                       <div>
-                        <p className="font-extrabold" style={{ color: '#333333' }}>
+                        <p className="font-extrabold" style={{ color: '#173224' }}>
                           {record.type === 'in' ? 'Absensi Masuk' : 'Absensi Keluar'}
                         </p>
                         <p className="text-sm" style={{ color: 'rgba(0,0,0,0.65)' }}>
@@ -259,7 +259,7 @@ const History = () => {
                           src={buildPhotoUrl(record.foto)}
                           alt="Foto absensi"
                           className="w-full h-36 sm:h-44 object-cover rounded-xl border shadow-md"
-                          style={{ borderColor: 'rgba(162,210,255,0.35)' }}
+                          style={{ borderColor: 'rgba(7,155,76,0.32)' }}
                         />
                       </div>
                     )}
@@ -279,20 +279,20 @@ const History = () => {
 
         {attendanceList.length > 0 && (
           <div className="grid grid-cols-2 gap-4 mt-6">
-            <div className="bg-white/95 rounded-2xl p-6 shadow-xl border" style={{ borderColor: 'rgba(162,210,255,0.22)' }}>
+            <div className="bg-white/95 rounded-lg p-6 shadow-md border" style={{ borderColor: 'rgba(7,155,76,0.24)' }}>
               <div className="text-center">
-                <p className="text-sm font-semibold" style={{ color: '#0b2a3a' }}>
+                <p className="text-sm font-semibold" style={{ color: '#05773a' }}>
                   Masuk
                 </p>
-                <p className="text-3xl font-extrabold text-[#333333]">{attendanceList.filter((a) => a.type === 'in').length}</p>
+                <p className="text-3xl font-extrabold text-[#173224]">{attendanceList.filter((a) => a.type === 'in').length}</p>
               </div>
             </div>
-            <div className="bg-white/95 rounded-2xl p-6 shadow-xl border" style={{ borderColor: 'rgba(162,210,255,0.22)' }}>
+            <div className="bg-white/95 rounded-lg p-6 shadow-md border" style={{ borderColor: 'rgba(7,155,76,0.24)' }}>
               <div className="text-center">
-                <p className="text-sm font-semibold" style={{ color: '#0b2a3a' }}>
+                <p className="text-sm font-semibold" style={{ color: '#05773a' }}>
                   Keluar
                 </p>
-                <p className="text-3xl font-extrabold text-[#333333]">{attendanceList.filter((a) => a.type === 'out').length}</p>
+                <p className="text-3xl font-extrabold text-[#173224]">{attendanceList.filter((a) => a.type === 'out').length}</p>
               </div>
             </div>
           </div>

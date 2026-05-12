@@ -48,8 +48,8 @@ export default function EmployeeDetail() {
 
   if (!user || user.role !== 'admin') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#eef6ff] p-4">
-        <div className="rounded-[24px] border border-sky-100 bg-white p-6 text-center shadow-sm">
+      <div className="flex min-h-screen items-center justify-center bg-[#f2fbf6] p-4">
+        <div className="rounded-lg border border-sky-100 bg-white p-6 text-center shadow-sm">
           <h2 className="text-2xl font-black text-slate-900">Akses Ditolak</h2>
           <p className="mt-2 text-sm font-semibold text-slate-500">Hanya admin yang dapat mengakses halaman ini.</p>
         </div>
@@ -59,7 +59,7 @@ export default function EmployeeDetail() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#eef6ff]">
+      <div className="flex min-h-screen items-center justify-center bg-[#f2fbf6]">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-sky-100 border-b-blue-700" />
       </div>
     );
@@ -67,13 +67,13 @@ export default function EmployeeDetail() {
 
   if (error || !employee) {
     return (
-      <div className="min-h-screen bg-[#eef6ff] px-4 py-5">
-        <div className="mx-auto max-w-md rounded-[24px] border border-amber-200 bg-amber-50 p-4">
+      <div className="min-h-screen bg-[#f2fbf6] px-4 py-5">
+        <div className="mx-auto max-w-md rounded-lg border border-amber-200 bg-amber-50 p-4">
           <p className="font-black text-amber-900">{error || 'Karyawan tidak ditemukan'}</p>
           <button
             type="button"
             onClick={() => navigate('/employees')}
-            className="mt-4 h-11 rounded-2xl bg-blue-700 px-5 font-extrabold text-white"
+            className="mt-4 h-11 rounded-lg bg-blue-700 px-5 font-extrabold text-white"
           >
             Kembali
           </button>
@@ -87,18 +87,18 @@ export default function EmployeeDetail() {
     .slice(0, 10);
 
   return (
-    <div className="min-h-screen bg-[#eef6ff] px-4 py-5">
+    <div className="min-h-screen bg-[#f2fbf6] px-4 py-5">
       <div className="mx-auto max-w-md space-y-4">
         <button
           type="button"
           onClick={() => navigate('/employees')}
-          className="flex h-11 items-center gap-2 rounded-2xl bg-white px-4 font-extrabold text-blue-700 shadow-sm"
+          className="flex h-11 items-center gap-2 rounded-lg bg-white px-4 font-extrabold text-blue-700 shadow-sm"
         >
           <FaArrowLeft />
           Karyawan
         </button>
 
-        <section className="rounded-[28px] bg-gradient-to-br from-blue-700 via-sky-600 to-sky-400 p-5 text-white shadow-xl shadow-sky-200">
+        <section className="rounded-lg border border-blue-800 bg-blue-700 p-5 text-white shadow-md ">
           <div className="flex items-start gap-4">
             <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full border-2 border-white/35 bg-white/20 text-2xl font-black ring-4 ring-white/12">
               {(employee.name || 'K').slice(0, 1).toUpperCase()}
@@ -111,12 +111,12 @@ export default function EmployeeDetail() {
           </div>
         </section>
 
-        <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+        <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
           <InfoRow icon={FaIdCard} label="NIK" value={employee.nik || '-'} />
           <InfoRow icon={FaEnvelope} label="Email" value={employee.email || '-'} />
         </section>
 
-        <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+        <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
             <FaUserCheck className="text-blue-700" />
             <h2 className="font-black text-slate-900">Statistik Absensi</h2>
@@ -132,20 +132,20 @@ export default function EmployeeDetail() {
           </div>
         </section>
 
-        <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+        <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
             <FaHistory className="text-blue-700" />
             <h2 className="font-black text-slate-900">Riwayat Terbaru</h2>
           </div>
 
           {recentRecords.length === 0 ? (
-            <div className="rounded-2xl bg-sky-50 p-4 text-sm font-semibold text-slate-500">
+            <div className="rounded-lg bg-sky-50 p-4 text-sm font-semibold text-slate-500">
               Belum ada riwayat absensi.
             </div>
           ) : (
             <div className="space-y-2">
               {recentRecords.map((record) => (
-                <div key={record.id} className="rounded-2xl bg-sky-50 p-3">
+                <div key={record.id} className="rounded-lg bg-sky-50 p-3">
                   <div className="flex items-center justify-between gap-3">
                     <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-blue-700">
                       {record.type === 'in' ? 'Masuk' : 'Pulang'}
@@ -168,7 +168,7 @@ export default function EmployeeDetail() {
 function InfoRow({ icon: Icon, label, value }) {
   return (
     <div className="flex items-center gap-3 border-b border-sky-50 py-3 last:border-b-0">
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-700">
         <Icon />
       </span>
       <div className="min-w-0">
@@ -181,7 +181,7 @@ function InfoRow({ icon: Icon, label, value }) {
 
 function StatBox({ label, value }) {
   return (
-    <div className="rounded-2xl bg-sky-50 p-3 text-center">
+    <div className="rounded-lg bg-sky-50 p-3 text-center">
       <p className="text-xs font-bold text-slate-500">{label}</p>
       <p className="text-2xl font-black text-blue-700">{value}</p>
     </div>
@@ -190,7 +190,7 @@ function StatBox({ label, value }) {
 
 function DetailBox({ label, value }) {
   return (
-    <div className="rounded-2xl border border-sky-100 p-3">
+    <div className="rounded-lg border border-sky-100 p-3">
       <p className="text-xs font-bold text-slate-500">{label}</p>
       <p className="mt-1 text-sm font-black text-slate-900">{value}</p>
     </div>

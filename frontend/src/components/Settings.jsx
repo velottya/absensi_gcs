@@ -79,9 +79,9 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-[#eef6ff] px-4 py-5">
+    <div className="min-h-screen bg-[#f2fbf6] px-4 py-5">
       <div className="mx-auto max-w-md space-y-4">
-        <section className="overflow-hidden rounded-[28px] bg-gradient-to-br from-blue-700 via-sky-600 to-sky-400 p-5 text-white shadow-xl shadow-sky-200">
+        <section className="overflow-hidden rounded-lg border border-blue-800 bg-blue-700 p-5 text-white shadow-md ">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-sky-100">Pengaturan akun</p>
@@ -99,7 +99,7 @@ export default function Settings() {
           </div>
         </section>
 
-        <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+        <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h3 className="text-lg font-black text-slate-900">Preferensi Absen</h3>
@@ -136,9 +136,9 @@ export default function Settings() {
           </div>
         </section>
 
-        <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+        <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
           <div className="mb-4 flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+            <span className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-700">
               <FaClock />
             </span>
             <div>
@@ -152,7 +152,7 @@ export default function Settings() {
             <TimeField label="Pulang" value={settings.workEnd} onChange={(value) => update('workEnd', value)} />
           </div>
 
-          <div className="mt-3 rounded-2xl bg-blue-50 p-3">
+          <div className="mt-3 rounded-lg bg-blue-50 p-3">
             <p className="text-sm font-extrabold text-slate-700">Pengingat otomatis</p>
             <p className="mt-1 text-sm font-semibold text-slate-500">
               Sebelum jam masuk dan sebelum jam pulang.
@@ -164,7 +164,7 @@ export default function Settings() {
             <select
               value={settings.defaultAttendance}
               onChange={(event) => update('defaultAttendance', event.target.value)}
-              className="h-12 w-full rounded-2xl border border-sky-100 bg-sky-50 px-4 font-bold text-slate-800 outline-none focus:border-blue-500"
+              className="h-12 w-full rounded-lg border border-sky-100 bg-sky-50 px-4 font-bold text-slate-800 outline-none focus:border-blue-500"
             >
               <option value="in">Check In</option>
               <option value="out">Check Out</option>
@@ -172,7 +172,7 @@ export default function Settings() {
           </div>
         </section>
 
-        <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+        <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h3 className="font-black text-slate-900">Perangkat</h3>
@@ -190,7 +190,7 @@ export default function Settings() {
           <button
             type="button"
             onClick={requestNotification}
-            className="mt-4 h-12 w-full rounded-2xl bg-blue-700 font-extrabold text-white shadow-lg shadow-blue-100 transition active:scale-[0.98]"
+            className="mt-4 h-12 w-full rounded-lg bg-blue-700 font-extrabold text-white shadow-sm  transition active:scale-[0.98]"
           >
             Izinkan Notifikasi
           </button>
@@ -216,7 +216,7 @@ function subtractMinutes(time, minutes) {
 
 function InfoPill({ label, value }) {
   return (
-    <div className="rounded-2xl bg-white/16 p-3 ring-1 ring-white/20">
+    <div className="rounded-lg bg-white/16 p-3 ring-1 ring-white/20">
       <p className="text-xs font-bold text-sky-100">{label}</p>
       <p className="text-lg font-black text-white">{value}</p>
     </div>
@@ -225,7 +225,7 @@ function InfoPill({ label, value }) {
 
 function ToggleRow({ title, text, checked, onChange }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl bg-sky-50 p-3">
+    <div className="flex items-center justify-between gap-3 rounded-lg bg-sky-50 p-3">
       <div className="min-w-0">
         <p className="font-extrabold text-slate-900">{title}</p>
         <p className="text-sm font-medium text-slate-500">{text}</p>
@@ -234,7 +234,7 @@ function ToggleRow({ title, text, checked, onChange }) {
         type="button"
         onClick={() => onChange(!checked)}
         className="relative h-8 w-14 shrink-0 rounded-full transition"
-        style={{ background: checked ? '#1d4ed8' : '#cbd5e1' }}
+        style={{ background: checked ? '#079b4c' : '#cbd5e1' }}
         aria-pressed={checked}
       >
         <span
@@ -254,7 +254,7 @@ function TimeField({ label, value, onChange }) {
         type="time"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-12 w-full rounded-2xl border border-sky-100 bg-sky-50 px-3 font-bold text-slate-800 outline-none focus:border-blue-500"
+        className="h-12 w-full rounded-lg border border-sky-100 bg-sky-50 px-3 font-bold text-slate-800 outline-none focus:border-blue-500"
       />
     </label>
   );
@@ -262,8 +262,8 @@ function TimeField({ label, value, onChange }) {
 
 function PermissionCard({ icon: Icon, title, text, status }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-sky-100 p-3">
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+    <div className="flex items-center gap-3 rounded-lg border border-sky-100 p-3">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-700">
         <Icon />
       </span>
       <div className="min-w-0 flex-1">

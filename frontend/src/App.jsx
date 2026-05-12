@@ -28,7 +28,7 @@ import Profile from './components/Profile.jsx';
 
 function AppContent() {
   return (
-    <div className="min-h-screen bg-[#eef6ff]">
+    <div className="min-h-screen bg-[#f2fbf6]">
       <Routes>
         <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />

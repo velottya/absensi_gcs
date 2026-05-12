@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaSyncAlt } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaSyncAlt } from 'react-icons/fa';
 
 const Attendance = () => {
   const { user } = useAuth();
@@ -241,13 +241,9 @@ const Attendance = () => {
                   ctx.restore();
                 };
 
-                // background gradient
+                // location card background
                 octx.save();
-                const bg = octx.createLinearGradient(0, y, 0, y + cardH);
-                bg.addColorStop(0, 'rgba(0, 0, 0, 0.18)');
-                bg.addColorStop(0.35, 'rgba(2, 6, 23, 0.74)');
-                bg.addColorStop(1, 'rgba(2, 6, 23, 0.92)');
-                octx.fillStyle = bg;
+                octx.fillStyle = 'rgba(2, 6, 23, 0.88)';
                 octx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
                 octx.lineWidth = 2;
                 drawRoundedRect(octx, x, y, cardW, cardH, radius);
@@ -255,14 +251,14 @@ const Attendance = () => {
                 octx.stroke();
 
                 // accent bar
-                octx.fillStyle = 'rgba(133, 173, 232, 0.95)';
+                octx.fillStyle = 'rgba(7, 155, 76, 0.95)';
                 drawRoundedRect(octx, x, y, 10, cardH, radius);
                 octx.fill();
 
                 // pin
                 const pinX = x + 30;
                 const pinY = y + 30;
-                octx.fillStyle = 'rgba(133, 173, 232, 0.95)';
+                octx.fillStyle = 'rgba(7, 155, 76, 0.95)';
                 octx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
                 octx.lineWidth = 2;
                 octx.beginPath();
@@ -367,22 +363,22 @@ const Attendance = () => {
 
   if (isAdmin) {
     return (
-      <div className="min-h-screen px-3 sm:px-4 py-6" style={{ background: '#F8F9FA' }}>
+      <div className="min-h-screen px-3 sm:px-4 py-6" style={{ background: '#f2fbf6' }}>
 
         <button
           onClick={() => navigate('/dashboard')}
           aria-label="Kembali ke Dashboard"
           className="absolute top-4 left-4 z-50 bg-white/90 hover:bg-white px-3 py-2 rounded-full shadow-md border border-gray-200 flex items-center gap-2"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: '#0b2a3a' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: '#05773a' }}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-            <div className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 shadow-xl" style={{ border: '1px solid rgba(162,210,255,0.25)' }}>
-          <h1 className="text-3xl font-extrabold text-[#333333] mb-2 text-center">Akses Terbatas Admin</h1>
+            <div className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-lg rounded-lg p-5 sm:p-6 md:p-8 shadow-md" style={{ border: '1px solid rgba(7,155,76,0.20)' }}>
+          <h1 className="text-3xl font-extrabold text-[#173224] mb-2 text-center">Akses Terbatas Admin</h1>
           <p className="text-center" style={{ color: 'rgba(0,0,0,0.65)' }}>Admin hanya bisa melihat history absensi, tidak bisa upload</p>
           <div className="text-center">
-            <a href="/history" className="inline-block px-6 py-3 font-extrabold rounded-2xl shadow-lg transition-transform" style={{ background: '#BDE0FE', color: '#0b2a3a' }}>
+            <a href="/history" className="inline-block px-6 py-3 font-extrabold rounded-lg shadow-sm transition-transform" style={{ background: '#fce4bd', color: '#05773a' }}>
               Lihat History
             </a>
           </div>
@@ -392,34 +388,34 @@ const Attendance = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] px-3 sm:px-4 py-6" style={{ background: '#F8F9FA' }}>
+    <div className="min-h-[calc(100vh-64px)] px-3 sm:px-4 py-6" style={{ background: '#f2fbf6' }}>
 
       <button
         onClick={() => navigate('/dashboard')}
         aria-label="Kembali ke Dashboard"
         className="absolute top-4 left-4 z-50 bg-white/90 hover:bg-white px-3 py-2 rounded-full shadow-md border border-gray-200 flex items-center gap-2"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: '#0b2a3a' }}>
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: '#05773a' }}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <div className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 shadow-xl" style={{ border: '1px solid rgba(162,210,255,0.25)' }}>
-        <h1 className="text-3xl font-extrabold text-[#333333] mb-2 text-center">
+      <div className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-lg rounded-lg p-5 sm:p-6 md:p-8 shadow-md" style={{ border: '1px solid rgba(7,155,76,0.20)' }}>
+        <h1 className="text-3xl font-extrabold text-[#173224] mb-2 text-center">
           Absensi Karyawan
         </h1>
         <p className="text-center text-sm sm:text-base" style={{ color: 'rgba(0,0,0,0.65)' }}>
         </p>
 
-        <div className="mb-5 p-4 rounded-2xl" style={{ background: 'rgba(162,210,255,0.12)', border: '1px solid rgba(162,210,255,0.22)' }}>
-          <p className="font-extrabold" style={{ color: '#333333' }}>
+        <div className="mb-5 p-4 rounded-lg" style={{ background: 'rgba(7,155,76,0.10)', border: '1px solid rgba(7,155,76,0.24)' }}>
+          <p className="font-extrabold" style={{ color: '#173224' }}>
             Karyawan: <span style={{ color: 'rgba(0,0,0,0.65)' }}>{user.name}</span>
             <span style={{ marginLeft: 8, fontWeight: 900, color: 'rgba(0,0,0,0.55)' }}>({user.nik})</span>
           </p>
 
           <div className="mt-3 flex items-start gap-3">
-            <span aria-hidden="true" style={{ marginTop: 2 }}>📍</span>
+            <FaMapMarkerAlt aria-hidden="true" style={{ marginTop: 2, color: '#079b4c' }} />
             <div>
-              <div className="text-sm font-extrabold" style={{ color: '#333333' }}>
+              <div className="text-sm font-extrabold" style={{ color: '#173224' }}>
                 Lokasi saat ini:
               </div>
               <div className="text-sm font-semibold" style={{ color: 'rgba(0,0,0,0.65)' }}>
@@ -436,17 +432,17 @@ const Attendance = () => {
           </div>
         </div>
 
-        <div className="mb-5 rounded-2xl" style={{ background: 'linear-gradient(180deg, rgba(162,210,255,0.18), rgba(189,224,254,0.10))', border: '1px solid rgba(162,210,255,0.25)' }}>
+        <div className="mb-5 rounded-lg" style={{ background: 'rgba(246,174,69,0.10)', border: '1px solid rgba(7,155,76,0.20)' }}>
           <div className="p-3 sm:p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <p className="text-sm font-extrabold" style={{ color: '#333333' }}>
+              <p className="text-sm font-extrabold" style={{ color: '#173224' }}>
                 {cameraFacing === 'environment' ? 'Kamera belakang' : 'Kamera depan'}
               </p>
               <button
                 type="button"
                 onClick={switchCamera}
-                className="flex items-center gap-2 rounded-2xl px-3 py-2 text-sm font-extrabold shadow-sm"
-                style={{ background: '#ffffff', color: '#1d4ed8', border: '1px solid rgba(162,210,255,0.35)' }}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-extrabold shadow-sm"
+                style={{ background: '#ffffff', color: '#079b4c', border: '1px solid rgba(7,155,76,0.32)' }}
               >
                 <FaSyncAlt size={13} />
                 Switch
@@ -457,15 +453,15 @@ const Attendance = () => {
               autoPlay
               playsInline
               muted
-              className="w-full rounded-2xl shadow-lg block aspect-video object-cover"
-              style={{ background: '#0b2a3a' }}
+              className="w-full rounded-lg shadow-sm block aspect-video object-cover"
+              style={{ background: '#05773a' }}
             />
 
             <div className="mt-4 flex items-center justify-center">
               <button
                 onClick={capturePhoto}
-                className="w-24 h-24 rounded-2xl shadow-lg transform transition-transform duration-200 flex items-center justify-center cursor-pointer"
-                style={{ background: '#BDE0FE', border: '1px solid rgba(162,210,255,0.35)', color: '#0b2a3a' }}
+                className="w-24 h-24 rounded-lg shadow-sm transform transition-transform duration-200 flex items-center justify-center cursor-pointer"
+                style={{ background: '#fce4bd', border: '1px solid rgba(7,155,76,0.32)', color: '#05773a' }}
                 aria-label="Ambil Foto"
               >
                 <img src="/kamera.png" alt="" className="h-12 w-12 object-contain" />
@@ -477,17 +473,17 @@ const Attendance = () => {
           </div>
         </div>
 
-        <div className="mb-5 rounded-2xl p-3 sm:p-4" style={{ background: 'rgba(162,210,255,0.10)', border: '1px solid rgba(162,210,255,0.18)' }}>
+        <div className="mb-5 rounded-lg p-3 sm:p-4" style={{ background: 'rgba(7,155,76,0.10)', border: '1px solid rgba(7,155,76,0.14)' }}>
 
           <div className="flex items-center justify-between gap-3 mb-3">
-            <p className="text-sm font-extrabold" style={{ color: '#333333' }}>
+            <p className="text-sm font-extrabold" style={{ color: '#173224' }}>
               Preview Foto
             </p>
 
             {(photoDataUrl || photoWithOverlayDataUrl) ? (
               <span
                 className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full"
-                style={{ background: 'rgba(162,210,255,0.25)', border: '1px solid rgba(162,210,255,0.35)', color: '#0b2a3a' }}
+                style={{ background: 'rgba(7,155,76,0.20)', border: '1px solid rgba(7,155,76,0.32)', color: '#05773a' }}
               >
                 Foto sudah diambil
               </span>
@@ -501,7 +497,7 @@ const Attendance = () => {
 
 
           {photoPreviewUrl || photoDataUrl || photoWithOverlayDataUrl ? (
-            <div className="w-full overflow-hidden rounded-2xl border-4 border-white bg-white shadow-lg">
+            <div className="w-full overflow-hidden rounded-lg border-4 border-white bg-white shadow-sm">
               <img
                 src={photoWithOverlayDataUrl || photoPreviewUrl || photoDataUrl}
                 alt="Selfie"
@@ -509,20 +505,20 @@ const Attendance = () => {
               />
             </div>
           ) : (
-            <div className="w-full min-h-40 sm:min-h-52 rounded-2xl border-2 border-dashed border-[#A2D2FF] bg-white/70 flex items-center justify-center text-center px-6">
-              <p className="font-medium" style={{ color: '#0b2a3a' }}>Hasil selfie akan muncul di sini setelah tombol kamera ditekan.</p>
+            <div className="w-full min-h-40 sm:min-h-52 rounded-lg border-2 border-dashed border-[#d5f8e4] bg-white/70 flex items-center justify-center text-center px-6">
+              <p className="font-medium" style={{ color: '#05773a' }}>Hasil selfie akan muncul di sini setelah tombol kamera ditekan.</p>
             </div>
           )}
         </div>
 
 
         <div className="mb-6">
-          <label className="block text-sm font-extrabold mb-2" style={{ color: '#333333' }}>Tipe Absen</label>
+          <label className="block text-sm font-extrabold mb-2" style={{ color: '#173224' }}>Tipe Absen</label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full p-3 rounded-2xl"
-            style={{ background: '#F8F9FA', border: '1px solid rgba(0,0,0,0.08)', color: '#333333' }}
+            className="w-full p-3 rounded-lg"
+            style={{ background: '#f2fbf6', border: '1px solid rgba(0,0,0,0.08)', color: '#173224' }}
           >
             <option value="in">Check In (Absen Masuk)</option>
             <option value="out">Check Out (Absen Keluar)</option>
@@ -532,11 +528,11 @@ const Attendance = () => {
 
         {error && (
           <p
-            className="mb-4 text-sm font-semibold rounded-2xl px-4 py-3"
+            className="mb-4 text-sm font-semibold rounded-lg px-4 py-3"
             style={{
-              background: 'rgba(255,183,77,0.18)',
-              border: '1px solid rgba(255,183,77,0.35)',
-              color: '#7a3e00'
+              background: 'rgba(246,174,69,0.18)',
+              border: '1px solid rgba(246,174,69,0.35)',
+              color: '#773e1b'
             }}
           >
             {error}
@@ -545,14 +541,14 @@ const Attendance = () => {
 
         {success && (
           <div
-            className="mb-6 rounded-2xl px-4 py-4"
-            style={{ background: 'rgba(162,210,255,0.12)', border: '1px solid rgba(162,210,255,0.25)' }}
+            className="mb-6 rounded-lg px-4 py-4"
+            style={{ background: 'rgba(7,155,76,0.10)', border: '1px solid rgba(7,155,76,0.20)' }}
           >
-            <p className="font-extrabold" style={{ color: '#333333' }}>{success}</p>
+            <p className="font-extrabold" style={{ color: '#173224' }}>{success}</p>
             <button
               onClick={() => navigate('/dashboard')}
-              className="mt-3 w-full py-3 rounded-2xl font-extrabold transition-transform"
-              style={{ background: '#A2D2FF', color: '#0b2a3a' }}
+              className="mt-3 w-full py-3 rounded-lg font-extrabold transition-transform"
+              style={{ background: '#d5f8e4', color: '#05773a' }}
             >
               Kembali ke Dashboard
             </button>
@@ -562,11 +558,11 @@ const Attendance = () => {
         <button
           onClick={submitAttendance}
           disabled={loading || !photo || !location}
-          className="w-full py-4 rounded-2xl font-extrabold text-lg transition-transform"
+          className="w-full py-4 rounded-lg font-extrabold text-lg transition-transform"
           style={{
-            background: loading || !photo || !location ? 'rgba(126,176,232,0.35)' : '#7EB0E8',
+            background: loading || !photo || !location ? 'rgba(7,155,76,0.35)' : '#079b4c',
             color: '#ffffff',
-            boxShadow: '0 12px 30px rgba(126,176,232,0.25)'
+            boxShadow: 'none'
           }}
         >
           {loading ? 'Mengirim...' : type === 'in' ? 'Check In' : 'Check Out'}

@@ -33,9 +33,9 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#eef6ff] px-4 py-5">
+    <div className="min-h-screen bg-[#f2fbf6] px-4 py-5">
       <div className="mx-auto max-w-md space-y-4">
-        <section className="overflow-hidden rounded-[28px] bg-gradient-to-br from-blue-700 via-sky-600 to-sky-400 p-5 text-white shadow-xl shadow-sky-200">
+        <section className="overflow-hidden rounded-lg border border-blue-800 bg-blue-700 p-5 text-white shadow-md ">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-sm font-semibold text-sky-100">{today}</p>
@@ -66,9 +66,9 @@ const Dashboard = () => {
           <QuickAction to="/profile" icon={FaClipboardList} label="Profile" text="Akun & setting" />
         </section>
 
-        <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+        <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+            <span className="grid h-11 w-11 place-items-center rounded-lg bg-blue-50 text-blue-700">
               <FaMapMarkerAlt />
             </span>
             <div>
@@ -83,7 +83,7 @@ const Dashboard = () => {
         </section>
 
         {user?.role === 'admin' && (
-          <section className="rounded-[24px] border border-sky-100 bg-white p-4 shadow-sm">
+          <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
             <h3 className="font-black text-slate-900">Ringkasan Tim</h3>
             <p className="text-sm text-slate-500">Sekilas kondisi tim hari ini</p>
 
@@ -106,7 +106,7 @@ const Dashboard = () => {
 
 function StatCard({ label, value, color }) {
   return (
-    <div className={[`rounded-2xl p-3`, color].join(' ')}>
+    <div className={[`rounded-lg p-3`, color].join(' ')}>
       <p className="text-xs font-bold text-slate-500">{label}</p>
       <p className="mt-1 text-2xl font-black">{value}</p>
     </div>
@@ -117,7 +117,7 @@ export default Dashboard;
 
 function StatusPill({ label, value }) {
   return (
-    <div className="rounded-2xl bg-white/16 p-3 ring-1 ring-white/20">
+    <div className="rounded-lg bg-white/16 p-3 ring-1 ring-white/20">
       <p className="text-xs font-bold text-sky-100">{label}</p>
       <p className="truncate text-base font-black text-white">{value}</p>
     </div>
@@ -129,11 +129,11 @@ function QuickAction({ to, icon: Icon, label, text, primary }) {
     <Link
       to={to}
       className={[
-        'rounded-[24px] border p-4 shadow-sm transition active:scale-[0.98]',
-        primary ? 'border-blue-600 bg-blue-700 text-white shadow-blue-100' : 'border-sky-100 bg-white text-slate-900'
+        'rounded-lg border p-4 shadow-sm transition active:scale-[0.98]',
+        primary ? 'border-blue-600 bg-blue-700 text-white ' : 'border-sky-100 bg-white text-slate-900'
       ].join(' ')}
     >
-      <span className={primary ? 'grid h-11 w-11 place-items-center rounded-2xl bg-white/18' : 'grid h-11 w-11 place-items-center rounded-2xl bg-blue-50 text-blue-700'}>
+      <span className={primary ? 'grid h-11 w-11 place-items-center rounded-lg bg-white/18' : 'grid h-11 w-11 place-items-center rounded-lg bg-blue-50 text-blue-700'}>
         <Icon />
       </span>
       <p className="mt-3 text-lg font-black">{label}</p>
@@ -144,7 +144,7 @@ function QuickAction({ to, icon: Icon, label, text, primary }) {
 
 function Readiness({ label, value }) {
   return (
-    <div className="rounded-2xl bg-sky-50 p-3">
+    <div className="rounded-lg bg-sky-50 p-3">
       <p className="text-xs font-bold text-slate-500">{label}</p>
       <p className="font-black text-blue-700">{value}</p>
     </div>
