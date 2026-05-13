@@ -16,14 +16,7 @@ const Attendance = () => {
   const [photoDataUrl, setPhotoDataUrl] = useState(null);
   const [photoWithOverlayDataUrl, setPhotoWithOverlayDataUrl] = useState(null);
   const [cameraFacing, setCameraFacing] = useState('user');
-  const [type, setType] = useState(() => {
-    try {
-      const settings = JSON.parse(localStorage.getItem('absensi.settings') || '{}');
-      return settings.defaultAttendance === 'out' ? 'out' : 'in';
-    } catch {
-      return 'in';
-    }
-  });
+  const [action, setAction] = useState('checkin');
 
   const [loading, setLoading] = useState(false);
   const [gpsError, setGpsError] = useState('');
@@ -32,6 +25,7 @@ const Attendance = () => {
 
   // Check if user is admin
   const isAdmin = user?.role === 'admin';
+  const attendanceStateKey = user?.nik ? `absensi.attendanceState.${user.nik}` : null;
 
   const stopCamera = useCallback(() => {
     if (videoRef.current?.srcObject) {
@@ -41,6 +35,11 @@ const Attendance = () => {
   }, []);
 
   useEffect(() => {
+    if (attendanceStateKey) {
+      const storedAction = localStorage.getItem(attendanceStateKey);
+      setAction(storedAction === 'checkout' ? 'checkout' : 'checkin');
+    }
+
     // Get GPS
     if (navigator.geolocation) {
       setGpsError('');
@@ -99,6 +98,11 @@ const Attendance = () => {
       stopCamera();
     };
   }, [cameraFacing, isAdmin, stopCamera]);
+
+  useEffect(() => {
+    if (!attendanceStateKey) return;
+    localStorage.setItem(attendanceStateKey, action);
+  }, [action, attendanceStateKey]);
 
   const switchCamera = () => {
     setCameraFacing((current) => (current === 'user' ? 'environment' : 'user'));
@@ -331,6 +335,7 @@ const Attendance = () => {
       setError('Foto dan GPS diperlukan');
       return;
     }
+    const submitType = action === 'checkout' ? 'out' : 'in';
     setLoading(true);
     setError('');
     setSuccess('');
@@ -339,13 +344,19 @@ const Attendance = () => {
       formData.append('foto', photo, 'selfie.jpg');
       formData.append('lat', location.lat);
       formData.append('lng', location.lng);
-      formData.append('type', type);
+      formData.append('type', submitType);
 
       await axios.post('/attendance', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      setSuccess('Absensi berhasil disimpan!');
+      if (submitType === 'in') {
+        setAction('checkout');
+        setSuccess('Check in berhasil disimpan. Selanjutnya silakan check out saat selesai bekerja.');
+      } else {
+        setAction('checkin');
+        setSuccess('Check out berhasil disimpan. Siklus absensi selesai.');
+      }
       setTimeout(() => {
         setSuccess('');
         setPhoto(null);
@@ -511,21 +522,6 @@ const Attendance = () => {
           )}
         </div>
 
-
-        <div className="mb-6">
-          <label className="block text-sm font-extrabold mb-2" style={{ color: '#173224' }}>Tipe Absen</label>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="w-full p-3 rounded-lg"
-            style={{ background: '#f2fbf6', border: '1px solid rgba(0,0,0,0.08)', color: '#173224' }}
-          >
-            <option value="in">Check In (Absen Masuk)</option>
-            <option value="out">Check Out (Absen Keluar)</option>
-          </select>
-        </div>
-
-
         {error && (
           <p
             className="mb-4 text-sm font-semibold rounded-lg px-4 py-3"
@@ -565,7 +561,7 @@ const Attendance = () => {
             boxShadow: 'none'
           }}
         >
-          {loading ? 'Mengirim...' : type === 'in' ? 'Check In' : 'Check Out'}
+          {loading ? 'Mengirim...' : action === 'checkin' ? 'Check In' : 'Check Out'}
         </button>
 
       </div>

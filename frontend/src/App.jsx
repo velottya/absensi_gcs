@@ -25,6 +25,7 @@ function PublicRoute({ children }) {
 
 import TopNavbar from './components/TopNavbar.jsx';
 import Profile from './components/Profile.jsx';
+import LocationGate from './components/LocationGate.jsx';
 
 function AppContent() {
   return (
@@ -67,7 +68,9 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <AppContent />
+        <LocationGate>
+          <AppContent />
+        </LocationGate>
       </AuthProvider>
     </Router>
   );
