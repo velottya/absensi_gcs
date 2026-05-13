@@ -4,6 +4,34 @@ import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { getApiOrigin } from '../config/api';
+
+const PhotoCard = ({ record }) => {
+  const [loadError, setLoadError] = useState(false);
+
+  if (!record.foto_exists || loadError) {
+    return (
+      <div
+        className="w-full h-36 sm:h-44 rounded-xl border shadow-md flex items-center justify-center text-center px-4"
+        style={{ borderColor: 'rgba(7,155,76,0.20)', background: 'rgba(255,255,255,0.75)' }}
+      >
+        <p className="text-sm font-semibold" style={{ color: 'rgba(0,0,0,0.55)' }}>
+          Foto tidak tersedia di server
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={record.foto_url || buildPhotoUrl(record.foto)}
+      alt="Foto absensi"
+      className="w-full h-36 sm:h-44 object-cover rounded-xl border shadow-md"
+      style={{ borderColor: 'rgba(7,155,76,0.32)' }}
+      onError={() => setLoadError(true)}
+    />
+  );
+};
 
 const History = () => {
   const { user } = useAuth();
@@ -113,16 +141,13 @@ const History = () => {
       return fotoPath;
     }
 
-    const normalizedPath = String(fotoPath).replace(/^\/+/, '');
+    const normalizedPath = String(fotoPath)
+      .replace(/\\/g, '/')
+      .replace(/^\/+/, '');
     const storagePath = normalizedPath.startsWith('storage/') ? normalizedPath : `storage/${normalizedPath}`;
 
-    try {
-      const base = axios.defaults.baseURL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
-      const apiUrl = new URL(base);
-      return `${apiUrl.origin}/${storagePath}`;
-    } catch {
-      return `/${storagePath}`;
-    }
+    const apiOrigin = getApiOrigin();
+    return `${apiOrigin}/${storagePath}`;
   };
 
   if (loading) {
@@ -280,12 +305,7 @@ const History = () => {
 
                     {record.foto && (
                       <div className="mb-3">
-                        <img
-                          src={buildPhotoUrl(record.foto)}
-                          alt="Foto absensi"
-                          className="w-full h-36 sm:h-44 object-cover rounded-xl border shadow-md"
-                          style={{ borderColor: 'rgba(7,155,76,0.32)' }}
-                        />
+                        <PhotoCard record={record} />
                       </div>
                     )}
 

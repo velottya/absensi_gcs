@@ -66,6 +66,21 @@ class AttendanceController extends Controller
             $attendances = Attendance::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
         }
 
+        $attendances = $attendances->map(function ($attendance) {
+            if ($attendance->foto) {
+                $exists = Storage::disk('public')->exists($attendance->foto);
+                $attendance->foto_exists = $exists;
+
+                if ($exists) {
+                    $attendance->foto_url = request()->getSchemeAndHttpHost() . '/storage/' . ltrim($attendance->foto, '/');
+                }
+            } else {
+                $attendance->foto_exists = false;
+            }
+
+            return $attendance;
+        });
+
         return response()->json($attendances);
     }
 
